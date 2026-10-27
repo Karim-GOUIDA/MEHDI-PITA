@@ -92,8 +92,8 @@ export default function App() {
           selectedPlatformId={highlightedPlatformId}
         />
 
-        {/* Second Ribbon */}
-        <MarqueeTicker lang={lang} speed="fast" />
+        {/* Second Endless Scrolling Ribbon (Opposite direction, never stopping) */}
+        <MarqueeTicker lang={lang} speed="fast" reverse={true} />
 
         {/* Real YouTube Featured Videos Player */}
         <RealVideosSection lang={lang} />

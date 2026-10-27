@@ -4,9 +4,14 @@ import { Language } from '../data/influencerData';
 interface MarqueeTickerProps {
   speed?: 'normal' | 'fast';
   lang?: Language;
+  reverse?: boolean;
 }
 
-export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({ speed = 'normal', lang = 'ar' }) => {
+export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({
+  speed = 'normal',
+  lang = 'ar',
+  reverse = false
+}) => {
   const isAr = lang === 'ar';
 
   const items = isAr
@@ -33,19 +38,49 @@ export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({ speed = 'normal', 
         "MEHDIPITACONTACT@GMAIL.COM"
       ];
 
+  // Quadruple items to ensure abundant width on all monitor sizes
+  const fullGroup = [...items, ...items];
+
+  // Choose animation class based on speed and direction
+  const animationClass = reverse
+    ? 'animate-marquee-reverse'
+    : speed === 'fast'
+      ? 'animate-marquee-fast'
+      : 'animate-marquee';
+
   return (
-    <div className="w-full bg-gradient-to-r from-purple-950/70 via-indigo-950/60 to-blue-950/70 border-y border-purple-500/25 py-3.5 overflow-hidden select-none backdrop-blur-sm shadow-inner" dir="ltr">
-      <div className={`flex ${speed === 'fast' ? 'animate-marquee-fast' : 'animate-marquee'} whitespace-nowrap`}>
-        {[...items, ...items].map((text, idx) => (
-          <div key={idx} className="flex items-center mx-6 text-xs sm:text-sm font-black tracking-wide">
-            <span className="bg-gradient-to-r from-violet-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent font-display">
-              {text}
-            </span>
-            <span className="mx-5 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" aria-hidden="true">
-              ⚽
-            </span>
-          </div>
-        ))}
+    <div
+      className="w-full bg-gradient-to-r from-purple-950/80 via-[#0e0b29] to-purple-950/80 border-y border-purple-500/25 py-3.5 overflow-hidden select-none backdrop-blur-md shadow-inner pointer-events-none"
+      dir="ltr"
+    >
+      <div className={`flex ${animationClass} whitespace-nowrap`}>
+        {/* Set 1: First 50% */}
+        <div className="flex shrink-0 items-center">
+          {fullGroup.map((text, idx) => (
+            <div key={`g1-${idx}`} className="flex items-center mx-5 text-xs sm:text-sm font-black tracking-wide">
+              <span className="bg-gradient-to-r from-violet-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent font-display">
+                {text}
+              </span>
+              <span className="mx-4 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" aria-hidden="true">
+                ⚽
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Set 2: Exact duplicate second 50% for 100% seamless, non-stopping infinite loop */}
+        <div className="flex shrink-0 items-center" aria-hidden="true">
+          {fullGroup.map((text, idx) => (
+            <div key={`g2-${idx}`} className="flex items-center mx-5 text-xs sm:text-sm font-black tracking-wide">
+              <span className="bg-gradient-to-r from-violet-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent font-display">
+                {text}
+              </span>
+              <span className="mx-4 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" aria-hidden="true">
+                ⚽
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
