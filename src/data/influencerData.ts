@@ -1,3 +1,5 @@
+import mehdiAvatar from '../assets/images/mehdipita.jpg';
+
 export type Language = 'ar' | 'fr';
 
 export interface SocialPlatform {
@@ -53,7 +55,7 @@ export const INFLUENCER_PROFILE = {
   bioAr: "صانع محتوى كروي بستايل كوميدي🤳 ✨حب ما تعمل حتى تعمل ما تحب✨ - Mrmlaaaa9. أهلاً بكم في الموقع الرسمي لمتابعة أحدث البثوث الكروية، المقاطع الكوميدية، وردود الفعل المباشرة على جميع المنصات.",
   bioFr: "Créateur de contenu football & humour 🤳 ✨ Aime ce que tu fais jusqu'à ce que tu fasses ce que tu aimes ✨ - Mrmlaaaa9. Bienvenue sur le hub officiel pour suivre tous les streams, vidéos virales et réactions en direct.",
   verified: true,
-  avatar: "/assets/aistudio/images_3343e3a6.jpg",
+  avatar: mehdiAvatar,
   stats: {
     instagramFollowers: "213K",
     instagramFollowing: "865",
