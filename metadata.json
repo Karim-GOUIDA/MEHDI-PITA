@@ -1,0 +1,6 @@
+{
+  "name": "KAI THORNE — Official Creator & Social Hub",
+  "description": "The official digital media hub and social channels showcase for creator Kai Thorne, featuring interactive feeds, metrics, media kit, and live platforms.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
