@@ -175,11 +175,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
 
-                {/* Subtle rim light / badge */}
-                <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/85 backdrop-blur-md border border-purple-500/40 text-xs font-bold text-cyan-300 shadow-md">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>MEHDI PITA</span>
-                </div>
+          
               </div>
 
               {/* Instagram Card Placed CLEANLY BELOW the photo (NO OVERLAP) */}
