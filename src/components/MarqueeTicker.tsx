@@ -12,12 +12,10 @@ export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({ speed = 'normal', 
   const items = isAr
     ? [
         "MEHDI PITA",
-        "سيرفر ديسكورد: PITA COMMUNITY (247+ عضو)",
-        "بث كيك المباشر: KICK.COM/MEHDIPITA (2.9K متابع)",
-        "فيسبوك: 113K متابع (MEHDI PITA)",
-        "تيك توك: 13.2K متابع (@MEHDI.PIITA)",
-        "يوتيوب: 23.1K مشترك (@MEHDIPITA)",
         "إنستغرام: 213K متابع (865 يتابعهم)",
+        "فيسبوك: 113K متابع (MEHDI PITA)",
+        "يوتيوب: 23.1K مشترك (@MEHDIPITA)",
+        "تيك توك: 13.2K متابع (@MEHDI.PIITA)",
         "صانع محتوى كروي بستايل كوميدي🤳",
         "✨حب ما تعمل حتى تعمل ما تحب✨",
         "- Mrmlaaaa9",
@@ -25,12 +23,10 @@ export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({ speed = 'normal', 
       ]
     : [
         "MEHDI PITA",
-        "Serveur Discord: PITA COMMUNITY (247+ membres)",
-        "Stream Kick Live: KICK.COM/MEHDIPITA (2.9K followers)",
-        "Facebook: 113K abonnés (MEHDI PITA)",
-        "TikTok: 13.2K abonnés (@MEHDI.PIITA)",
-        "YouTube: 23.1K abonnés (@MEHDIPITA)",
         "Instagram: 213K abonnés (865 abonnements)",
+        "Facebook: 113K abonnés (MEHDI PITA)",
+        "YouTube: 23.1K abonnés (@MEHDIPITA)",
+        "TikTok: 13.2K abonnés (@MEHDI.PIITA)",
         "Créateur de contenu football & humour 🤳",
         "✨ Aime ce que tu fais jusqu'à ce que tu fasses ce que tu aimes ✨",
         "- Mrmlaaaa9",
@@ -45,7 +41,7 @@ export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({ speed = 'normal', 
             <span className="bg-gradient-to-r from-violet-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent font-display">
               {text}
             </span>
-            <span className="mx-5 text-[#53FC18] drop-shadow-[0_0_8px_rgba(83,252,24,0.8)]" aria-hidden="true">
+            <span className="mx-5 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" aria-hidden="true">
               ⚽
             </span>
           </div>

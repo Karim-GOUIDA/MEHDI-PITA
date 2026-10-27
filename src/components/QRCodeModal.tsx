@@ -14,7 +14,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ isOpen, onClose, lang 
 
   if (!isOpen) return null;
 
-  const profileUrl = typeof window !== 'undefined' ? window.location.href : 'https://kick.com/mehdipita';
+  const profileUrl = typeof window !== 'undefined' ? window.location.href : 'https://www.instagram.com/mehdipita/';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(profileUrl);

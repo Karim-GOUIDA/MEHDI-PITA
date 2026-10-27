@@ -26,7 +26,7 @@ export interface SocialPlatform {
   highlightsFr: string;
   directActionLabelAr: string;
   directActionLabelFr: string;
-  iconType: 'kick' | 'youtube' | 'tiktok' | 'instagram' | 'facebook' | 'discord';
+  iconType: 'youtube' | 'tiktok' | 'instagram' | 'facebook';
   isLiveSynced?: boolean;
 }
 
@@ -61,15 +61,7 @@ export const INFLUENCER_PROFILE = {
     instagramFollowing: "865",
     facebookFollowers: "113K",
     tiktokFollowers: "13.2K",
-    youtubeSubscribers: "23.1K",
-    kickFollowers: "2.9K",
-    discordMembers: "247+"
-  },
-  liveStatus: {
-    platform: "Kick",
-    url: "https://kick.com/mehdipita",
-    statusTextAr: "بث مباشر وتفاعل فوري على Kick",
-    statusTextFr: "Stream en direct & chat en temps réel sur Kick"
+    youtubeSubscribers: "23.1K"
   }
 };
 
@@ -149,7 +141,7 @@ export const INITIAL_SOCIAL_PLATFORMS: SocialPlatform[] = [
     directActionLabelAr: "اشتراك في YouTube",
     directActionLabelFr: "S'abonner sur YouTube",
     iconType: "youtube",
-    isLiveSynced: false
+    isLiveSynced: true
   },
   {
     id: "tiktok",
@@ -175,56 +167,6 @@ export const INITIAL_SOCIAL_PLATFORMS: SocialPlatform[] = [
     directActionLabelFr: "Suivre sur TikTok",
     iconType: "tiktok",
     isLiveSynced: false
-  },
-  {
-    id: "kick",
-    name: "كيك (Kick)",
-    nameFr: "Kick",
-    handle: "mehdipita",
-    url: "https://kick.com/mehdipita",
-    followersCount: "2,900",
-    followersRaw: 2892,
-    followersLabelAr: "متابع مباشر (Kick Live)",
-    followersLabelFr: "Followers Stream Live",
-    categoryAr: "بث مباشر وألعاب",
-    categoryFr: "Live Streaming & Gaming",
-    descriptionAr: "منصة البث المباشر الأساسية لـ MEHDI PITA: سهرات كروية، نقاشات مع الجمهور، ألعاب وجلسات تفاعلية حية.",
-    descriptionFr: "Plateforme de stream live principale de MEHDI PITA: soirées foot en direct, discussions avec la commu et gaming.",
-    gradient: "from-[#53FC18]/30 via-purple-900/30 to-blue-900/25",
-    accentColor: "#53FC18",
-    badgeAr: "بث مباشر رسمي",
-    badgeFr: "Stream officiel",
-    highlightsAr: "2.9K متابع · سهرات لايف وتفاعل مباشر",
-    highlightsFr: "2.9K followers · Soirées live & streaming",
-    directActionLabelAr: "مشاهدة البث على Kick",
-    directActionLabelFr: "Regarder sur Kick",
-    iconType: "kick",
-    isLiveSynced: true
-  },
-  {
-    id: "discord",
-    name: "ديسكورد (Discord)",
-    nameFr: "Discord",
-    handle: "PITA COMMUNITY ❤️",
-    url: "https://discord.com/invite/GnxEWBnkCP",
-    followersCount: "247+",
-    followersRaw: 247,
-    followersLabelAr: "عضو في السيرفر (Members)",
-    followersLabelFr: "Membres du serveur",
-    categoryAr: "سيرفر ومجتمع المتابعين",
-    categoryFr: "Serveur & Communauté",
-    descriptionAr: "سيرفر PITA COMMUNITY الرسمي على ديسكورد: تواصل صوتي مباشر، شات مع MEHDI PITA والمتابعين، وبطولات كروية حصرية.",
-    descriptionFr: "Serveur officiel PITA COMMUNITY sur Discord : salons vocaux, échanges directs avec MEHDI PITA et la communauté, tournois de foot.",
-    gradient: "from-[#5865F2]/30 via-indigo-900/30 to-purple-900/25",
-    accentColor: "#5865F2",
-    badgeAr: "مجتمع رسمي",
-    badgeFr: "Commu officielle",
-    highlightsAr: "247+ عضو · شات وتفاعل صوتي مباشر",
-    highlightsFr: "247+ membres · Chat & salons vocaux",
-    directActionLabelAr: "انضمام إلى Discord",
-    directActionLabelFr: "Rejoindre le Discord",
-    iconType: "discord",
-    isLiveSynced: true
   }
 ];
 

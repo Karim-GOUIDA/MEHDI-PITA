@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BadgeCheck, Share2, QrCode, Globe } from 'lucide-react';
-import { KickIcon } from './BrandIcons';
-import { INFLUENCER_PROFILE, Language } from '../data/influencerData';
+import { BadgeCheck, Share2, QrCode, Globe, Mail } from 'lucide-react';
+import { Language } from '../data/influencerData';
 
 interface NavbarProps {
   lang: Language;
@@ -101,13 +100,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <QrCode className="w-4 h-4" />
           </button>
           <a
-            href="https://kick.com/mehdipita"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-black text-black bg-[#53FC18] hover:bg-[#45dc10] rounded-xl transition-all shadow-lg shadow-[#53FC18]/25 whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer"
+            href="#contact"
+            className="px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-black text-white bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 rounded-xl transition-all shadow-lg shadow-indigo-900/40 whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer"
           >
-            <KickIcon size={16} />
-            <span>{isAr ? 'بث كيك' : 'Kick Live'}</span>
+            <Mail size={15} />
+            <span>{isAr ? 'تواصل معي' : 'Contact'}</span>
           </a>
         </div>
       </div>

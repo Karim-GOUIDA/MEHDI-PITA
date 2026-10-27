@@ -30,7 +30,7 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               {isAr ? INFLUENCER_PROFILE.mottoAr : INFLUENCER_PROFILE.mottoFr}
             </p>
             <p className="text-xs text-purple-300 font-mono mb-4">
-              {isAr ? INFLUENCER_PROFILE.roleAr : INFLUENCER_PROFILE.roleFr} · {INFLUENCER_PROFILE.slogan}
+              {isAr ? INFLUENCER_PROFILE.roleAr : INFLUENCER_PROFILE.roleFr} · {INFLUENCER_PROFILE.handle}
             </p>
             <div className="flex items-center gap-2.5 flex-wrap">
               {SOCIAL_PLATFORMS.map((platform) => (
@@ -72,7 +72,7 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
             </ul>
           </div>
 
-          {/* Direct Email */}
+          {/* Direct Email & Official Info */}
           <div className="md:col-span-3">
             <span className="text-xs font-bold uppercase tracking-wider text-cyan-300 block mb-4 font-mono">
               {isAr ? 'معلومات التواصل' : 'Contact officiel'}
@@ -92,30 +92,30 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               </div>
               <div>
                 <span className="text-zinc-500 block text-xs">
-                  {isAr ? 'قناة البث المباشر:' : 'Canal stream live :'}
+                  {isAr ? 'قناة يوتيوب الرسمية:' : 'Chaîne YouTube officielle :'}
                 </span>
                 <a
-                  href="https://kick.com/mehdipita"
+                  href="https://www.youtube.com/@Mehdipita"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#53FC18] hover:underline font-mono"
+                  className="text-red-400 hover:underline font-mono"
                   dir="ltr"
                 >
-                  kick.com/mehdipita (2.9K)
+                  @Mehdipita (23.1K)
                 </a>
               </div>
               <div>
                 <span className="text-zinc-500 block text-xs">
-                  {isAr ? 'سيرفر ديسكورد الرسمي:' : 'Serveur Discord officiel :'}
+                  {isAr ? 'حساب إنستغرام الرسمي:' : 'Compte Instagram officiel :'}
                 </span>
                 <a
-                  href="https://discord.com/invite/GnxEWBnkCP"
+                  href="https://www.instagram.com/mehdipita/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#8891f7] hover:underline font-mono"
+                  className="text-pink-400 hover:underline font-mono"
                   dir="ltr"
                 >
-                  PITA COMMUNITY
+                  @mehdipita (213K)
                 </a>
               </div>
             </div>

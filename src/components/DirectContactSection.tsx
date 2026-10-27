@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Flame, Sparkles, Copy, Check, Send, Mail, Zap } from 'lucide-react';
-import { KickIcon, YoutubeIcon, TikTokIcon, InstagramIcon, DiscordIcon, FacebookIcon } from './BrandIcons';
+import { YoutubeIcon, TikTokIcon, InstagramIcon, FacebookIcon } from './BrandIcons';
 import { INFLUENCER_PROFILE, Language } from '../data/influencerData';
 
 interface DirectContactSectionProps {
@@ -44,68 +44,14 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
   };
 
   return (
-    <section id="contact" className="py-20 md:py-28 bg-[#070614] border-t border-purple-950/60 scroll-mt-16 relative overflow-hidden">
+    <section className="py-20 md:py-28 bg-[#070614] border-t border-purple-950/60 relative overflow-hidden">
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-gradient-to-r from-violet-600/15 via-indigo-600/20 to-cyan-500/15 blur-[160px] pointer-events-none rounded-full" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* Interactive Hype Button Column */}
-          <div className="lg:col-span-5 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#120e2e] via-[#0d0a26] to-[#070617] border border-purple-500/30 shadow-2xl relative">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent font-mono mb-3">
-              <Zap className="w-4 h-4 text-cyan-400 fill-current" />
-              <span>{isAr ? 'نبض الجمهور والتفاعل المباشر' : 'Force & Soutien de la commu'}</span>
-            </div>
-
-            <h3 className="font-display text-3xl sm:text-4xl font-black text-white mb-3">
-              {isAr ? 'ارسل حماس وتشجيع لـ MEHDI PITA' : 'Envoyez de la force à MEHDI PITA'}
-            </h3>
-            <p className="text-zinc-300 text-sm leading-relaxed mb-8">
-              {isAr
-                ? 'اضغط على الزر لإرسال الدعم والطاقة الإيجابية مباشرة في العداد الحي!'
-                : 'Cliquez sur le bouton pour envoyer votre soutien et faire grimper le compteur en direct !'}
-            </p>
-
-            <div className="mb-6 p-4 rounded-2xl bg-[#080618] border border-purple-500/20 flex items-center justify-between">
-              <div>
-                <div className="text-xs uppercase font-bold text-zinc-400">
-                  {isAr ? 'إجمالي الحماس المرسل' : 'Total de force envoyée'}
-                </div>
-                <div className="font-display text-3xl sm:text-4xl font-black bg-gradient-to-r from-violet-300 via-indigo-200 to-[#53FC18] bg-clip-text text-transparent font-mono tabular-nums">
-                  {hypeCount.toLocaleString()}
-                </div>
-              </div>
-              <div className="w-3.5 h-3.5 rounded-full bg-[#53FC18] animate-ping" />
-            </div>
-
-            {/* Tap to Send Hype Button */}
-            <div className="relative">
-              <button
-                onClick={handleHype}
-                className="w-full py-5 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-black text-base sm:text-lg rounded-2xl transition-all shadow-xl shadow-indigo-600/40 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer select-none"
-              >
-                <Flame className="w-6 h-6 text-cyan-200 fill-current animate-bounce" />
-                <span>{isAr ? 'اضغط لإرسال الحماس 🔥' : 'Envoyer de la force 🔥'}</span>
-              </button>
-
-              {/* Floating Emojis */}
-              {bursts.map((burst) => (
-                <span
-                  key={burst.id}
-                  style={{
-                    left: `${burst.x}px`,
-                    top: `${burst.y}px`
-                  }}
-                  className="absolute pointer-events-none text-2xl animate-float-up transition-all font-sans"
-                >
-                  {burst.emoji}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Direct Reach & Real Contact Info */}
-          <div className="lg:col-span-7 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          {/* Direct Reach & Official Contact Info (Anchored by #contact) */}
+          <div id="contact" className="lg:col-span-7 space-y-6 scroll-mt-28">
             <div>
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent font-mono mb-2">
                 <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
@@ -116,8 +62,8 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
               </h2>
               <p className="text-zinc-300 text-sm mt-3 leading-relaxed">
                 {isAr
-                  ? 'للتعاون، الإعلانات، أو التواصل المباشر مع MEHDI PITA، يمكنك مراسلته عبر البريد الإلكتروني الرسمي أو عبر سيرفر الديسكورد والمنصات.'
-                  : 'Pour tout partenariat, sponsoring ou contact direct avec MEHDI PITA, contactez-le par email officiel ou sur Discord et ses réseaux.'}
+                  ? 'للتعاون، الإعلانات، أو التواصل المباشر مع MEHDI PITA، يمكنك مراسلته عبر البريد الإلكتروني الرسمي أو عبر منصات التواصل الرسمية.'
+                  : 'Pour tout partenariat, sponsoring ou contact direct avec MEHDI PITA, contactez-le par email officiel ou sur ses réseaux.'}
               </p>
             </div>
 
@@ -156,38 +102,8 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
               </div>
             </div>
 
-            {/* Direct Channels Cards with Follower counts (All 6 platforms) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
-              <a
-                href="https://kick.com/mehdipita"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-4 rounded-2xl bg-[#0d0c24] border border-[#53FC18]/40 hover:border-[#53FC18] transition-all flex flex-col items-center text-center group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#53FC18]/20 text-[#53FC18] flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                  <KickIcon size={20} />
-                </div>
-                <span className="font-bold text-white text-xs">Kick Live</span>
-                <span className="text-[11px] text-[#53FC18] font-bold font-mono">
-                  {isAr ? '2.9K متابع' : '2.9K followers'}
-                </span>
-              </a>
-
-              <a
-                href="https://discord.com/invite/GnxEWBnkCP"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-4 rounded-2xl bg-[#0d0c24] border border-[#5865F2]/40 hover:border-[#5865F2] transition-all flex flex-col items-center text-center group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#5865F2]/20 text-[#8891f7] flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                  <DiscordIcon size={20} />
-                </div>
-                <span className="font-bold text-white text-xs">Discord</span>
-                <span className="text-[11px] text-[#8891f7] font-bold font-mono">
-                  {isAr ? '247+ عضو' : '247+ membres'}
-                </span>
-              </a>
-
+            {/* Direct Channels Cards (4 official platforms) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
               <a
                 href="https://www.instagram.com/mehdipita/"
                 target="_blank"
@@ -204,17 +120,17 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
               </a>
 
               <a
-                href="https://www.facebook.com/profile.php?id=61563910933144"
+                href="https://www.youtube.com/@Mehdipita"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 rounded-2xl bg-[#0d0c24] border border-blue-500/30 hover:border-blue-400 transition-all flex flex-col items-center text-center group"
+                className="p-4 rounded-2xl bg-[#0d0c24] border border-red-500/30 hover:border-red-500 transition-all flex flex-col items-center text-center group"
               >
-                <div className="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                  <FacebookIcon size={20} />
+                <div className="w-10 h-10 rounded-xl bg-red-600/20 text-red-500 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                  <YoutubeIcon size={20} />
                 </div>
-                <span className="font-bold text-white text-xs">Facebook</span>
-                <span className="text-[11px] text-blue-400 font-bold font-mono">
-                  {isAr ? '113K متابع' : '113K abonnés'}
+                <span className="font-bold text-white text-xs">YouTube</span>
+                <span className="text-[11px] text-red-400 font-bold font-mono">
+                  {isAr ? '23.1K مشترك' : '23.1K abonnés'}
                 </span>
               </a>
 
@@ -234,19 +150,73 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
               </a>
 
               <a
-                href="https://www.youtube.com/@Mehdipita"
+                href="https://www.facebook.com/profile.php?id=61563910933144"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 rounded-2xl bg-[#0d0c24] border border-red-500/30 hover:border-red-500 transition-all flex flex-col items-center text-center group"
+                className="p-4 rounded-2xl bg-[#0d0c24] border border-blue-500/30 hover:border-blue-400 transition-all flex flex-col items-center text-center group"
               >
-                <div className="w-10 h-10 rounded-xl bg-red-600/20 text-red-500 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                  <YoutubeIcon size={20} />
+                <div className="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                  <FacebookIcon size={20} />
                 </div>
-                <span className="font-bold text-white text-xs">YouTube</span>
-                <span className="text-[11px] text-red-400 font-bold font-mono">
-                  {isAr ? '23.1K مشترك' : '23.1K abonnés'}
+                <span className="font-bold text-white text-xs">Facebook</span>
+                <span className="text-[11px] text-blue-400 font-bold font-mono">
+                  {isAr ? '113K متابع' : '113K abonnés'}
                 </span>
               </a>
+            </div>
+          </div>
+
+          {/* Interactive Hype Button Column (Secondary / Fan Support) */}
+          <div id="hype" className="lg:col-span-5 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#120e2e] via-[#0d0a26] to-[#070617] border border-purple-500/30 shadow-2xl relative scroll-mt-28">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent font-mono mb-3">
+              <Zap className="w-4 h-4 text-cyan-400 fill-current" />
+              <span>{isAr ? 'نبض الجمهور والتفاعل المباشر' : 'Force & Soutien de la commu'}</span>
+            </div>
+
+            <h3 className="font-display text-2xl sm:text-3xl font-black text-white mb-3">
+              {isAr ? 'ارسل حماس وتشجيع لـ MEHDI PITA' : 'Envoyez de la force à MEHDI PITA'}
+            </h3>
+            <p className="text-zinc-300 text-sm leading-relaxed mb-6">
+              {isAr
+                ? 'اضغط على الزر لإرسال الدعم والطاقة الإيجابية مباشرة في العداد الحي!'
+                : 'Cliquez sur le bouton pour envoyer votre soutien et faire grimper le compteur en direct !'}
+            </p>
+
+            <div className="mb-6 p-4 rounded-2xl bg-[#080618] border border-purple-500/20 flex items-center justify-between">
+              <div>
+                <div className="text-xs uppercase font-bold text-zinc-400">
+                  {isAr ? 'إجمالي الحماس المرسل' : 'Total de force envoyée'}
+                </div>
+                <div className="font-display text-3xl sm:text-4xl font-black bg-gradient-to-r from-violet-300 via-indigo-200 to-cyan-400 bg-clip-text text-transparent font-mono tabular-nums">
+                  {hypeCount.toLocaleString()}
+                </div>
+              </div>
+              <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping" />
+            </div>
+
+            {/* Tap to Send Hype Button */}
+            <div className="relative">
+              <button
+                onClick={handleHype}
+                className="w-full py-5 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-black text-base sm:text-lg rounded-2xl transition-all shadow-xl shadow-indigo-600/40 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer select-none"
+              >
+                <Flame className="w-6 h-6 text-cyan-200 fill-current animate-bounce" />
+                <span>{isAr ? 'اضغط لإرسال الحماس 🔥' : 'Envoyer de la force 🔥'}</span>
+              </button>
+
+              {/* Floating Emojis */}
+              {bursts.map((burst) => (
+                <span
+                  key={burst.id}
+                  style={{
+                    left: `${burst.x}px`,
+                    top: `${burst.y}px`
+                  }}
+                  className="absolute pointer-events-none text-2xl animate-float-up transition-all font-sans"
+                >
+                  {burst.emoji}
+                </span>
+              ))}
             </div>
           </div>
         </div>

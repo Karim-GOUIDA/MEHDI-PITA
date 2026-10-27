@@ -6,8 +6,6 @@ export interface LiveStatsState {
   isSyncing: boolean;
   lastSynced: Date;
   autoSyncActive: boolean;
-  discordOnline?: number;
-  kickIsLive?: boolean;
 }
 
 export function formatFollowerCount(num: number): string {
@@ -20,55 +18,77 @@ export function formatFollowerCount(num: number): string {
   return num.toLocaleString();
 }
 
+/**
+ * Fetch real live statistics from public APIs / mirrors
+ */
 export const fetchLivePlatformStats = async (): Promise<{
-  kickFollowers?: number;
-  kickIsLive?: boolean;
-  discordMembers?: number;
-  discordOnline?: number;
+  youtubeSubscribers?: number;
+  tiktokFollowers?: number;
+  instagramFollowers?: number;
+  facebookFollowers?: number;
 }> => {
   const result: {
-    kickFollowers?: number;
-    kickIsLive?: boolean;
-    discordMembers?: number;
-    discordOnline?: number;
+    youtubeSubscribers?: number;
+    tiktokFollowers?: number;
+    instagramFollowers?: number;
+    facebookFollowers?: number;
   } = {};
 
-  // 1. Fetch live Discord Invite stats
-  try {
-    const discordRes = await fetch('https://discord.com/api/v9/invites/GnxEWBnkCP?with_counts=true', {
-      headers: {
-        'Accept': 'application/json'
+  // 1. YouTube Live Subscriber Count
+  // Tries multiple public Invidious API instances (CORS-friendly public mirror) or YouTube Data API
+  const invidiousInstances = [
+    'https://inv.nadeko.net',
+    'https://vid.puffyan.us',
+    'https://invidious.jing.rocks'
+  ];
+
+  for (const instance of invidiousInstances) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const res = await fetch(`${instance}/api/v1/channels/@Mehdipita`, {
+        signal: controller.signal,
+        headers: { Accept: 'application/json' }
+      });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const data = await res.json();
+        if (typeof data.subCount === 'number' && data.subCount > 0) {
+          result.youtubeSubscribers = data.subCount;
+          break;
+        }
       }
-    });
-    if (discordRes.ok) {
-      const data = await discordRes.json();
-      if (typeof data.approximate_member_count === 'number') {
-        result.discordMembers = data.approximate_member_count;
-      }
-      if (typeof data.approximate_presence_count === 'number') {
-        result.discordOnline = data.approximate_presence_count;
-      }
+    } catch {
+      // Continue to next mirror on failure
     }
-  } catch (err) {
-    console.debug('Discord live fetch error:', err);
   }
 
-  // 2. Fetch live Kick Channel stats
+  // 2. Custom or webhook API endpoint (if defined by user in localStorage or env)
   try {
-    const kickRes = await fetch('https://kick.com/api/v2/channels/mehdipita', {
-      headers: {
-        'Accept': 'application/json'
+    const customApiUrl =
+      (typeof window !== 'undefined' && window.localStorage?.getItem('pita_stats_api_url')) ||
+      (import.meta as unknown as { env?: { VITE_STATS_API_URL?: string } }).env?.VITE_STATS_API_URL;
+
+    if (customApiUrl) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const res = await fetch(customApiUrl, {
+        signal: controller.signal,
+        headers: { Accept: 'application/json' }
+      });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const data = await res.json();
+        if (typeof data.youtube === 'number') result.youtubeSubscribers = data.youtube;
+        if (typeof data.tiktok === 'number') result.tiktokFollowers = data.tiktok;
+        if (typeof data.instagram === 'number') result.instagramFollowers = data.instagram;
+        if (typeof data.facebook === 'number') result.facebookFollowers = data.facebook;
       }
-    });
-    if (kickRes.ok) {
-      const data = await kickRes.json();
-      if (typeof data.followers_count === 'number') {
-        result.kickFollowers = data.followers_count;
-      }
-      result.kickIsLive = Boolean(data.livestream);
     }
-  } catch (err) {
-    console.debug('Kick live fetch error:', err);
+  } catch {
+    // Custom endpoint optional
   }
 
   return result;
@@ -78,8 +98,6 @@ export function useLiveStats() {
   const [platforms, setPlatforms] = useState<SocialPlatform[]>(SOCIAL_PLATFORMS);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [lastSynced, setLastSynced] = useState<Date>(new Date());
-  const [discordOnline, setDiscordOnline] = useState<number>(11);
-  const [kickIsLive, setKickIsLive] = useState<boolean>(false);
 
   const sync = useCallback(async () => {
     setIsSyncing(true);
@@ -88,31 +106,54 @@ export function useLiveStats() {
 
       setPlatforms((prev) =>
         prev.map((platform) => {
-          // Update Discord
-          if (platform.id === 'discord' && liveData.discordMembers) {
-            const countStr = `${liveData.discordMembers}`;
-            const onlineStr = liveData.discordOnline ? ` · ${liveData.discordOnline} متصل الآن` : '';
-            const onlineStrFr = liveData.discordOnline ? ` · ${liveData.discordOnline} en ligne` : '';
-
+          // Live YouTube update
+          if (platform.id === 'youtube' && liveData.youtubeSubscribers) {
+            const formatted = formatFollowerCount(liveData.youtubeSubscribers);
             return {
               ...platform,
-              followersCount: countStr,
-              followersRaw: liveData.discordMembers,
-              highlightsAr: `${countStr} عضو${onlineStr} · شات مباشر`,
-              highlightsFr: `${countStr} membres${onlineStrFr} · Chat actif`,
+              followersCount: `${liveData.youtubeSubscribers.toLocaleString()}`,
+              followersRaw: liveData.youtubeSubscribers,
+              highlightsAr: `${formatted} مشترك · محتوى وفيديوهات حصرية`,
+              highlightsFr: `${formatted} abonnés · Vidéos et actus régulières`,
               isLiveSynced: true
             };
           }
 
-          // Update Kick
-          if (platform.id === 'kick' && liveData.kickFollowers) {
-            const formatted = formatFollowerCount(liveData.kickFollowers);
+          // Live TikTok update (if returned by custom API)
+          if (platform.id === 'tiktok' && liveData.tiktokFollowers) {
+            const formatted = formatFollowerCount(liveData.tiktokFollowers);
             return {
               ...platform,
-              followersCount: formatted,
-              followersRaw: liveData.kickFollowers,
-              highlightsAr: `${formatted} متابع · سهرات كروية وبث مباشر`,
-              highlightsFr: `${formatted} followers · Live streaming & réacs`,
+              followersCount: `${liveData.tiktokFollowers.toLocaleString()}`,
+              followersRaw: liveData.tiktokFollowers,
+              highlightsAr: `${formatted} متابع · مقاطع سريعة وكوميديا`,
+              highlightsFr: `${formatted} abonnés · Clips et vidéos virales`,
+              isLiveSynced: true
+            };
+          }
+
+          // Live Instagram update (if returned by custom API)
+          if (platform.id === 'instagram' && liveData.instagramFollowers) {
+            const formatted = formatFollowerCount(liveData.instagramFollowers);
+            return {
+              ...platform,
+              followersCount: `${liveData.instagramFollowers.toLocaleString()}`,
+              followersRaw: liveData.instagramFollowers,
+              highlightsAr: `${formatted} متابع · ستوريات ويوميات`,
+              highlightsFr: `${formatted} abonnés · Stories quotidiennes`,
+              isLiveSynced: true
+            };
+          }
+
+          // Live Facebook update (if returned by custom API)
+          if (platform.id === 'facebook' && liveData.facebookFollowers) {
+            const formatted = formatFollowerCount(liveData.facebookFollowers);
+            return {
+              ...platform,
+              followersCount: `${liveData.facebookFollowers.toLocaleString()}`,
+              followersRaw: liveData.facebookFollowers,
+              highlightsAr: `${formatted} متابع · تفاعل جماهيري`,
+              highlightsFr: `${formatted} abonnés · Communauté active`,
               isLiveSynced: true
             };
           }
@@ -121,12 +162,6 @@ export function useLiveStats() {
         })
       );
 
-      if (liveData.discordOnline !== undefined) {
-        setDiscordOnline(liveData.discordOnline);
-      }
-      if (liveData.kickIsLive !== undefined) {
-        setKickIsLive(liveData.kickIsLive);
-      }
       setLastSynced(new Date());
     } finally {
       setIsSyncing(false);
@@ -137,10 +172,10 @@ export function useLiveStats() {
     // Initial fetch
     sync();
 
-    // Auto polling every 45 seconds
+    // Auto refresh every 60 seconds
     const interval = setInterval(() => {
       sync();
-    }, 45000);
+    }, 60000);
 
     return () => clearInterval(interval);
   }, [sync]);
@@ -149,8 +184,6 @@ export function useLiveStats() {
     platforms,
     isSyncing,
     lastSynced,
-    discordOnline,
-    kickIsLive,
     refreshNow: sync
   };
 }

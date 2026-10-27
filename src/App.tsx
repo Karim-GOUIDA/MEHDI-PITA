@@ -24,7 +24,7 @@ export default function App() {
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Live Auto-Syncing Hook for real-time stats
-  const { platforms, isSyncing, lastSynced, kickIsLive, refreshNow } = useLiveStats();
+  const { platforms } = useLiveStats();
 
   const toggleLang = () => {
     setLang((prev) => (prev === 'ar' ? 'fr' : 'ar'));
@@ -74,18 +74,17 @@ export default function App() {
 
       {/* Main Sections */}
       <main className="flex-1">
-        {/* Hero Section with Live Metrics */}
+        {/* Hero Section */}
         <HeroSection
           lang={lang}
           platforms={platforms}
           onSelectPlatform={handleSelectPlatform}
-          kickIsLive={kickIsLive}
         />
 
         {/* Endless Scrolling Ribbon */}
         <MarqueeTicker lang={lang} />
 
-        {/* All Official Social Media Accounts Grid with Prominent Follower Numbers */}
+        {/* All Official Social Media Accounts Grid (Instagram, Facebook, YouTube, TikTok) */}
         <SocialPlatformsGrid
           lang={lang}
           platforms={platforms}
