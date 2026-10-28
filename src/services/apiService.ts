@@ -32,7 +32,7 @@ export async function fetchOnlineData(): Promise<AppOnlineData | null> {
   if (functionUrl) {
     try {
       const response = await fetch(functionUrl, {
-        headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' },
+        headers: { Accept: 'application/json' },
         cache: 'no-store'
       });
       if (!response.ok) {
