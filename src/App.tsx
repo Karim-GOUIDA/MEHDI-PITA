@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { MarqueeTicker } from './components/MarqueeTicker';
@@ -13,25 +13,98 @@ import { DirectContactSection } from './components/DirectContactSection';
 import { QRCodeModal } from './components/QRCodeModal';
 import { QuickDock } from './components/QuickDock';
 import { Footer } from './components/Footer';
-import { Language } from './data/influencerData';
-import { useLiveStats } from './services/statsSync';
+import { AdminPortal } from './components/AdminPortal';
+import {
+  Language,
+  SocialPlatform,
+  RealVideo,
+  INITIAL_SOCIAL_PLATFORMS,
+  REAL_YOUTUBE_VIDEOS
+} from './data/influencerData';
 import { Check } from 'lucide-react';
+
+const checkIsAdminPath = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  const path = window.location.pathname.toLowerCase().replace(/\/$/, '');
+  const hash = window.location.hash.toLowerCase().replace(/\/$/, '');
+  return (
+    path.endsWith('/pitadmin') ||
+    hash === '#/pitadmin' ||
+    hash === '#pitadmin'
+  );
+};
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ar');
   const [isQrOpen, setIsQrOpen] = useState(false);
   const [highlightedPlatformId, setHighlightedPlatformId] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [isAdminView, setIsAdminView] = useState<boolean>(checkIsAdminPath);
 
-  // Live Auto-Syncing Hook for real-time stats
-  const { platforms } = useLiveStats();
+  // Managed customizable platforms (loaded from localStorage or default)
+  const [platforms, setPlatforms] = useState<SocialPlatform[]>(() => {
+    try {
+      const saved = localStorage.getItem('pita_custom_platforms');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Failed to load custom platforms', e);
+    }
+    return INITIAL_SOCIAL_PLATFORMS;
+  });
+
+  // Managed customizable videos (loaded from localStorage or default)
+  const [videos, setVideos] = useState<RealVideo[]>(() => {
+    try {
+      const saved = localStorage.getItem('pita_custom_videos');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Failed to load custom videos', e);
+    }
+    return REAL_YOUTUBE_VIDEOS;
+  });
+
+  // URL / route listener for /pitadmin and #/pitadmin
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setIsAdminView(checkIsAdminPath());
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
+
+  const handleSaveData = (newData: { platforms: SocialPlatform[]; videos: RealVideo[] }) => {
+    setPlatforms(newData.platforms);
+    setVideos(newData.videos);
+    try {
+      localStorage.setItem('pita_custom_platforms', JSON.stringify(newData.platforms));
+      localStorage.setItem('pita_custom_videos', JSON.stringify(newData.videos));
+    } catch (e) {
+      console.error('Failed to save to localStorage', e);
+    }
+  };
+
+  const handleExitAdmin = () => {
+    setIsAdminView(false);
+    if (window.location.hash.includes('pitadmin')) {
+      window.location.hash = '';
+    }
+    if (window.location.pathname.includes('/pitadmin')) {
+      const newPath = window.location.pathname.replace(/\/pitadmin\/?$/, '') || '/';
+      window.history.pushState(null, '', newPath);
+    }
+  };
 
   const toggleLang = () => {
     setLang((prev) => (prev === 'ar' ? 'fr' : 'ar'));
   };
 
   const handleCopyProfileLink = () => {
-    const url = window.location.href;
+    const url = window.location.origin + window.location.pathname;
     navigator.clipboard.writeText(url);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2500);
@@ -44,6 +117,19 @@ export default function App() {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
+
+  // If URL matches /pitadmin or #/pitadmin, render Admin View
+  if (isAdminView) {
+    return (
+      <AdminPortal
+        currentPlatforms={platforms}
+        currentVideos={videos}
+        initialLang={lang}
+        onSaveData={handleSaveData}
+        onExit={handleExitAdmin}
+      />
+    );
+  }
 
   const isAr = lang === 'ar';
 
@@ -81,8 +167,8 @@ export default function App() {
           onSelectPlatform={handleSelectPlatform}
         />
 
-        {/* Endless Scrolling Ribbon */}
-        <MarqueeTicker lang={lang} />
+        {/* Endless Scrolling Ribbon 1 (Dynamic follower counts) */}
+        <MarqueeTicker lang={lang} platforms={platforms} speed="normal" />
 
         {/* All Official Social Media Accounts Grid (Instagram, Facebook, YouTube, TikTok) */}
         <SocialPlatformsGrid
@@ -92,14 +178,14 @@ export default function App() {
           selectedPlatformId={highlightedPlatformId}
         />
 
-        {/* Second Endless Scrolling Ribbon (Opposite direction, never stopping) */}
-        <MarqueeTicker lang={lang} speed="fast" reverse={true} />
+        {/* Second Endless Scrolling Ribbon 2 (Opposite direction, never stopping) */}
+        <MarqueeTicker lang={lang} platforms={platforms} speed="fast" reverse={true} />
 
-        {/* Real YouTube Featured Videos Player */}
-        <RealVideosSection lang={lang} />
+        {/* Real YouTube Featured Videos Player (Dynamic configurable videos) */}
+        <RealVideosSection lang={lang} videos={videos} />
 
         {/* Direct Contact & Fan Hype Section */}
-        <DirectContactSection lang={lang} />
+        <DirectContactSection lang={lang} platforms={platforms} />
       </main>
 
       {/* Footer */}

@@ -5,11 +5,13 @@ import { YoutubeIcon } from './BrandIcons';
 
 interface RealVideosSectionProps {
   lang: Language;
+  videos?: RealVideo[];
 }
 
-export const RealVideosSection: React.FC<RealVideosSectionProps> = ({ lang }) => {
+export const RealVideosSection: React.FC<RealVideosSectionProps> = ({ lang, videos }) => {
   const [activeVideo, setActiveVideo] = useState<RealVideo | null>(null);
   const isAr = lang === 'ar';
+  const videosList = videos && videos.length > 0 ? videos : REAL_YOUTUBE_VIDEOS;
 
   return (
     <section id="videos" className="py-20 md:py-28 bg-[#080718] border-t border-purple-950/60 scroll-mt-16 relative">
@@ -42,9 +44,9 @@ export const RealVideosSection: React.FC<RealVideosSectionProps> = ({ lang }) =>
           </a>
         </div>
 
-        {/* 3 Real YouTube Videos Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {REAL_YOUTUBE_VIDEOS.map((video, idx) => (
+        {/* Real YouTube Videos Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {videosList.map((video, idx) => (
             <div
               key={video.id}
               onClick={() => setActiveVideo(video)}

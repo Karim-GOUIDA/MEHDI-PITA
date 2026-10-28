@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExternalLink } from 'lucide-react';
-import { INFLUENCER_PROFILE, SocialPlatform, Language } from '../data/influencerData';
+import { INFLUENCER_PROFILE, SocialPlatform, Language, formatCompactNumber } from '../data/influencerData';
 import { YoutubeIcon, InstagramIcon, TikTokIcon, FacebookIcon } from './BrandIcons';
 
 interface HeroSectionProps {
@@ -16,11 +16,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const isAr = lang === 'ar';
 
-  // Find platform data from current synced state
+  // Find platform data from current state with auto compact formatting
   const igPlatform = platforms.find((p) => p.id === 'instagram');
   const fbPlatform = platforms.find((p) => p.id === 'facebook');
   const ytPlatform = platforms.find((p) => p.id === 'youtube');
   const tiktokPlatform = platforms.find((p) => p.id === 'tiktok');
+
+  const igCount = formatCompactNumber(igPlatform?.followersCount || '213K');
+  const fbCount = formatCompactNumber(fbPlatform?.followersCount || '113K');
+  const ytCount = formatCompactNumber(ytPlatform?.followersCount || '23.1K');
+  const ttCount = formatCompactNumber(tiktokPlatform?.followersCount || '13.2K');
 
   return (
     <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden border-b border-purple-950/60">
@@ -78,52 +83,52 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </p>
             </div>
 
-            {/* Direct Action Buttons to Official Platforms */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-10">
+            {/* Direct Action Buttons to Official Platforms (Dynamic counts without commas) */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-10">
               <a
                 href="https://www.instagram.com/mehdipita/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3.5 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 hover:opacity-95 text-white font-black text-sm rounded-xl transition-all shadow-xl shadow-pink-600/25 flex items-center gap-2.5 cursor-pointer whitespace-nowrap hover:scale-105"
+                className="px-3.5 py-2 sm:px-5 sm:py-3.5 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 hover:opacity-95 text-white font-black text-xs sm:text-sm rounded-xl transition-all shadow-xl shadow-pink-600/25 flex items-center gap-2 sm:gap-2.5 cursor-pointer whitespace-nowrap hover:scale-105"
               >
-                <InstagramIcon size={18} />
-                <span>Instagram (213K)</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <InstagramIcon size={16} />
+                <span>Instagram ({igCount})</span>
+                <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </a>
 
               <a
                 href="https://www.youtube.com/@Mehdipita"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3.5 bg-[#FF0000] hover:bg-red-600 text-white font-extrabold text-sm rounded-xl transition-all shadow-xl shadow-red-600/25 flex items-center gap-2 cursor-pointer whitespace-nowrap hover:scale-105"
+                className="px-3.5 py-2 sm:px-5 sm:py-3.5 bg-[#FF0000] hover:bg-red-600 text-white font-extrabold text-xs sm:text-sm rounded-xl transition-all shadow-xl shadow-red-600/25 flex items-center gap-2 cursor-pointer whitespace-nowrap hover:scale-105"
               >
-                <YoutubeIcon size={18} />
-                <span>YouTube (23.1K)</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <YoutubeIcon size={16} />
+                <span>YouTube ({ytCount})</span>
+                <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </a>
 
               <a
                 href="https://www.tiktok.com/@mehdi.piita"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3.5 bg-[#00F2FE]/20 hover:bg-[#00F2FE]/30 text-cyan-300 font-extrabold text-sm rounded-xl transition-all border border-[#00F2FE]/40 shadow-xl flex items-center gap-2 cursor-pointer whitespace-nowrap hover:scale-105"
+                className="px-3.5 py-2 sm:px-5 sm:py-3.5 bg-[#00F2FE]/20 hover:bg-[#00F2FE]/30 text-cyan-300 font-extrabold text-xs sm:text-sm rounded-xl transition-all border border-[#00F2FE]/40 shadow-xl flex items-center gap-2 cursor-pointer whitespace-nowrap hover:scale-105"
               >
-                <TikTokIcon size={18} />
-                <span>TikTok (13.2K)</span>
+                <TikTokIcon size={16} />
+                <span>TikTok ({ttCount})</span>
               </a>
 
               <a
                 href="https://www.facebook.com/profile.php?id=61563910933144"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3.5 bg-[#1877F2]/20 hover:bg-[#1877F2]/30 text-blue-300 font-extrabold text-sm rounded-xl transition-all border border-[#1877F2]/40 shadow-xl flex items-center gap-2 cursor-pointer whitespace-nowrap hover:scale-105"
+                className="px-3.5 py-2 sm:px-5 sm:py-3.5 bg-[#1877F2]/20 hover:bg-[#1877F2]/30 text-blue-300 font-extrabold text-xs sm:text-sm rounded-xl transition-all border border-[#1877F2]/40 shadow-xl flex items-center gap-2 cursor-pointer whitespace-nowrap hover:scale-105"
               >
-                <FacebookIcon size={18} />
-                <span>Facebook (113K)</span>
+                <FacebookIcon size={16} />
+                <span>Facebook ({fbCount})</span>
               </a>
             </div>
 
-            {/* Quick jump to channels */}
+            {/* Quick jump to channels (Auto compact format) */}
             <div className="pt-6 border-t border-purple-950/80">
               <span className="text-xs font-bold tracking-widest uppercase bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent block mb-3 font-mono">
                 {isAr ? 'جميع الحسابات الرسمية وعدد المتابعين' : 'Comptes officiels & Nombre d\'abonnés'}
@@ -137,7 +142,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   >
                     <span>{isAr ? p.name : p.nameFr}</span>
                     <span className="text-cyan-400 font-mono text-[11px] font-bold">
-                      {p.followersCount}
+                      {formatCompactNumber(p.followersCount)}
                     </span>
                   </button>
                 ))}
@@ -161,7 +166,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 />
               </div>
 
-              {/* Instagram Card Placed CLEANLY BELOW the photo (NO OVERLAP) */}
+              {/* Instagram Card Placed CLEANLY BELOW the photo (Compact format: 213K) */}
               <a
                 href="https://www.instagram.com/mehdipita/"
                 target="_blank"
@@ -174,10 +179,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   </div>
                   <div>
                     <div className="text-sm font-black text-white">
-                      {isAr ? '213K متابع على إنستغرام' : '213K followers sur Instagram'}
+                      {isAr ? `${igCount} متابع على إنستغرام` : `${igCount} followers sur Instagram`}
                     </div>
                     <div className="text-xs text-pink-300 font-mono font-bold mt-0.5" dir="ltr">
-                      @mehdipita · {isAr ? '865 يتابعهم' : '865 abonnements'}
+                      @mehdipita
                     </div>
                   </div>
                 </div>
@@ -190,34 +195,34 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </div>
 
-        {/* 4 Official Platforms Follower Numbers Strip */}
+        {/* 4 Official Platforms Follower Numbers Strip (Auto Compact format: 213K, 113K, etc.) */}
         <div className="mt-16 pt-10 border-t border-purple-950/80 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {/* Instagram: 213K */}
+          {/* Instagram */}
           <div className="flex flex-col p-4 rounded-2xl bg-purple-950/20 border border-purple-900/30 hover:border-pink-500/40 transition-colors">
             <span className="font-display text-2xl sm:text-3xl font-black bg-gradient-to-r from-violet-300 to-pink-400 bg-clip-text text-transparent font-mono tabular-nums">
-              {igPlatform?.followersCount || "213,000"}
+              {igCount}
             </span>
             <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider mt-1">
               {isAr ? 'إنستغرام' : 'Instagram'}
             </span>
-            <span className="text-[11px] text-zinc-500 mt-0.5" dir="ltr">@mehdipita (865)</span>
+            <span className="text-[11px] text-zinc-500 mt-0.5" dir="ltr">@mehdipita</span>
           </div>
 
-          {/* Facebook: 113K */}
+          {/* Facebook */}
           <div className="flex flex-col p-4 rounded-2xl bg-purple-950/20 border border-purple-900/30 hover:border-blue-500/40 transition-colors">
             <span className="font-display text-2xl sm:text-3xl font-black bg-gradient-to-r from-blue-300 to-indigo-300 bg-clip-text text-transparent font-mono tabular-nums">
-              {fbPlatform?.followersCount || "113,000"}
+              {fbCount}
             </span>
             <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider mt-1">
               {isAr ? 'فيسبوك' : 'Facebook'}
             </span>
-            <span className="text-[11px] text-zinc-500 mt-0.5" dir="ltr">113K followers</span>
+            <span className="text-[11px] text-zinc-500 mt-0.5" dir="ltr">Mehdi Pita</span>
           </div>
 
-          {/* YouTube: 23.1K */}
+          {/* YouTube */}
           <div className="flex flex-col p-4 rounded-2xl bg-purple-950/20 border border-purple-900/30 hover:border-red-500/40 transition-colors">
             <span className="font-display text-2xl sm:text-3xl font-black bg-gradient-to-r from-red-400 to-amber-300 bg-clip-text text-transparent font-mono tabular-nums">
-              {ytPlatform?.followersCount || "23,100"}
+              {ytCount}
             </span>
             <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider mt-1">
               {isAr ? 'يوتيوب' : 'YouTube'}
@@ -225,10 +230,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span className="text-[11px] text-zinc-500 mt-0.5" dir="ltr">@Mehdipita</span>
           </div>
 
-          {/* TikTok: 13.2K */}
+          {/* TikTok */}
           <div className="flex flex-col p-4 rounded-2xl bg-purple-950/20 border border-purple-900/30 hover:border-cyan-500/40 transition-colors">
             <span className="font-display text-2xl sm:text-3xl font-black bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent font-mono tabular-nums">
-              {tiktokPlatform?.followersCount || "13,200"}
+              {ttCount}
             </span>
             <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider mt-1">
               {isAr ? 'تيك توك' : 'TikTok'}

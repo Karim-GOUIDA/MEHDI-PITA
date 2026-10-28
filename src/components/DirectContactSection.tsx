@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { Flame, Sparkles, Copy, Check, Send, Mail, Zap } from 'lucide-react';
 import { YoutubeIcon, TikTokIcon, InstagramIcon, FacebookIcon } from './BrandIcons';
-import { INFLUENCER_PROFILE, Language } from '../data/influencerData';
+import { INFLUENCER_PROFILE, Language, SocialPlatform, formatCompactNumber } from '../data/influencerData';
 
 interface DirectContactSectionProps {
   lang: Language;
+  platforms?: SocialPlatform[];
 }
 
-export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang }) => {
+export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang, platforms }) => {
   const [hypeCount, setHypeCount] = useState(84920);
   const [bursts, setBursts] = useState<{ id: number; x: number; y: number; emoji: string }[]>([]);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const isAr = lang === 'ar';
+
+  const igCount = formatCompactNumber(platforms?.find((p) => p.id === 'instagram')?.followersCount || '213K');
+  const ytCount = formatCompactNumber(platforms?.find((p) => p.id === 'youtube')?.followersCount || '23.1K');
+  const ttCount = formatCompactNumber(platforms?.find((p) => p.id === 'tiktok')?.followersCount || '13.2K');
+  const fbCount = formatCompactNumber(platforms?.find((p) => p.id === 'facebook')?.followersCount || '113K');
 
   const emojis = ['🔥', '⚡', '⚽', '🏆', '💚', '👑'];
 
@@ -86,17 +92,17 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
               <div className="flex items-center gap-2 self-stretch sm:self-auto">
                 <button
                   onClick={handleCopyEmail}
-                  className="flex-1 sm:flex-initial px-4 py-2.5 bg-purple-900/60 hover:bg-purple-800 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 border border-purple-700/50 cursor-pointer"
+                  className="flex-1 sm:flex-initial px-3 py-2 sm:px-4 sm:py-2.5 bg-purple-900/60 hover:bg-purple-800 text-white rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold transition-all flex items-center justify-center gap-1.5 border border-purple-700/50 cursor-pointer"
                 >
-                  {copiedEmail ? <Check className="w-4 h-4 text-cyan-400" /> : <Copy className="w-4 h-4" />}
+                  {copiedEmail ? <Check className="w-3.5 h-3.5 text-cyan-400" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedEmail ? (isAr ? "تم النسخ!" : "Copié !") : (isAr ? "نسخ الإيميل" : "Copier")}</span>
                 </button>
 
                 <a
                   href={`mailto:${INFLUENCER_PROFILE.email}`}
-                  className="flex-1 sm:flex-initial px-4 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer"
+                  className="flex-1 sm:flex-initial px-3 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-bold text-[11px] sm:text-xs rounded-lg sm:rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer"
                 >
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   <span>{isAr ? 'إرسال رسالة' : 'Écrire un mail'}</span>
                 </a>
               </div>
@@ -115,7 +121,7 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
                 </div>
                 <span className="font-bold text-white text-xs">Instagram</span>
                 <span className="text-[11px] text-pink-400 font-bold font-mono">
-                  {isAr ? '213K متابع' : '213K abonnés'}
+                  {isAr ? `${igCount} متابع` : `${igCount} abonnés`}
                 </span>
               </a>
 
@@ -130,7 +136,7 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
                 </div>
                 <span className="font-bold text-white text-xs">YouTube</span>
                 <span className="text-[11px] text-red-400 font-bold font-mono">
-                  {isAr ? '23.1K مشترك' : '23.1K abonnés'}
+                  {isAr ? `${ytCount} مشترك` : `${ytCount} abonnés`}
                 </span>
               </a>
 
@@ -145,7 +151,7 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
                 </div>
                 <span className="font-bold text-white text-xs">TikTok</span>
                 <span className="text-[11px] text-cyan-300 font-bold font-mono">
-                  {isAr ? '13.2K متابع' : '13.2K abonnés'}
+                  {isAr ? `${ttCount} متابع` : `${ttCount} abonnés`}
                 </span>
               </a>
 
@@ -160,7 +166,7 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
                 </div>
                 <span className="font-bold text-white text-xs">Facebook</span>
                 <span className="text-[11px] text-blue-400 font-bold font-mono">
-                  {isAr ? '113K متابع' : '113K abonnés'}
+                  {isAr ? `${fbCount} متابع` : `${fbCount} abonnés`}
                 </span>
               </a>
             </div>

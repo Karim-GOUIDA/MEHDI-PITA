@@ -101,10 +101,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           <a
             href="#contact"
-            className="px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-black text-white bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 rounded-xl transition-all shadow-lg shadow-indigo-900/40 whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer"
+            className="px-2.5 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-sm font-bold sm:font-black text-white bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 rounded-lg sm:rounded-xl transition-all shadow-md sm:shadow-lg shadow-indigo-900/40 whitespace-nowrap shrink-0 flex items-center gap-1 sm:gap-1.5 cursor-pointer"
           >
-            <Mail size={15} />
-            <span>{isAr ? 'تواصل معي' : 'Contact'}</span>
+            <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span>{isAr ? 'تواصل' : 'Contact'}</span>
           </a>
         </div>
       </div>

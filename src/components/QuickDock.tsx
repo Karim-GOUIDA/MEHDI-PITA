@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SOCIAL_PLATFORMS, SocialPlatform, Language } from '../data/influencerData';
+import { SOCIAL_PLATFORMS, SocialPlatform, Language, formatCompactNumber } from '../data/influencerData';
 import { PlatformIcon } from './BrandIcons';
 import { QrCode, Mail } from 'lucide-react';
 
@@ -40,12 +40,12 @@ export const QuickDock: React.FC<QuickDockProps> = ({
             <button
               key={platform.id}
               onClick={() => onSelectPlatform(platform.id)}
-              title={`${isAr ? platform.name : platform.nameFr} (${platform.followersCount})`}
+              title={`${isAr ? platform.name : platform.nameFr} (${formatCompactNumber(platform.followersCount)})`}
               className="p-2 text-zinc-400 hover:text-cyan-300 rounded-xl hover:bg-purple-950/60 transition-colors shrink-0 group relative cursor-pointer"
             >
               <PlatformIcon type={platform.iconType} size={18} />
               <span className="hidden sm:group-hover:block absolute -top-8 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-lg bg-[#0c0a22] border border-purple-500/40 text-[10px] font-bold text-cyan-300 whitespace-nowrap shadow-xl">
-                {isAr ? platform.name : platform.nameFr} ({platform.followersCount})
+                {isAr ? platform.name : platform.nameFr} ({formatCompactNumber(platform.followersCount)})
               </span>
             </button>
           ))}
@@ -63,9 +63,9 @@ export const QuickDock: React.FC<QuickDockProps> = ({
 
         <a
           href="#contact"
-          className="px-3.5 py-1.5 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-black text-xs rounded-xl transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+          className="px-2.5 py-1 sm:px-3.5 sm:py-1.5 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-bold sm:font-black text-[11px] sm:text-xs rounded-lg sm:rounded-xl transition-all shadow-sm sm:shadow-md flex items-center gap-1 sm:gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
         >
-          <Mail size={13} />
+          <Mail className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
           <span>{isAr ? 'تواصل' : 'Contact'}</span>
         </a>
       </div>

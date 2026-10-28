@@ -58,12 +58,51 @@ export const INFLUENCER_PROFILE = {
   avatar: mehdiAvatar,
   stats: {
     instagramFollowers: "213K",
-    instagramFollowing: "865",
     facebookFollowers: "113K",
     tiktokFollowers: "13.2K",
     youtubeSubscribers: "23.1K"
   }
 };
+
+/**
+ * Automatically formats follower count to clean social media compact string:
+ * e.g. 213000 -> 213K, 1000200 -> 1M, 1000000000 -> 1B, 750600 -> 750.6K, 1200000 -> 1.2M
+ */
+export function formatCompactNumber(input: string | number | undefined | null): string {
+  if (input === undefined || input === null) return '';
+  const str = String(input).trim();
+  if (!str) return '';
+
+  // Already in compact unit format: e.g. 213k, 213K, 1.2M, 750.6k, 1B
+  const compactMatch = str.match(/^(\d+(?:\.\d+)?)\s*([kmbKMB])$/);
+  if (compactMatch) {
+    const num = parseFloat(compactMatch[1]);
+    const unit = compactMatch[2].toUpperCase();
+    const formattedNum = num % 1 === 0 ? num.toString() : parseFloat(num.toFixed(1)).toString();
+    return `${formattedNum}${unit}`;
+  }
+
+  // Parse pure numbers or numeric strings with commas/spaces
+  const cleanNumeric = str.replace(/,/g, '').replace(/\s+/g, '');
+  const parsed = Number(cleanNumeric);
+  if (!isNaN(parsed) && parsed > 0) {
+    if (parsed >= 1_000_000_000) {
+      const b = parsed / 1_000_000_000;
+      return `${parseFloat(b.toFixed(1))}B`;
+    }
+    if (parsed >= 1_000_000) {
+      const m = parsed / 1_000_000;
+      return `${parseFloat(m.toFixed(1))}M`;
+    }
+    if (parsed >= 1_000) {
+      const k = parsed / 1_000;
+      return `${parseFloat(k.toFixed(1))}K`;
+    }
+    return parsed.toString();
+  }
+
+  return str;
+}
 
 export const INITIAL_SOCIAL_PLATFORMS: SocialPlatform[] = [
   {
@@ -72,12 +111,10 @@ export const INITIAL_SOCIAL_PLATFORMS: SocialPlatform[] = [
     nameFr: "Instagram",
     handle: "@mehdipita",
     url: "https://www.instagram.com/mehdipita/",
-    followersCount: "213,000",
+    followersCount: "213K",
     followersRaw: 213000,
     followersLabelAr: "متابع (Followers)",
     followersLabelFr: "Abonnés (Followers)",
-    followingCountAr: "865 يتابعهم",
-    followingCountFr: "865 abonnements",
     categoryAr: "يوميات وستوريات",
     categoryFr: "Stories & Lifestyle",
     descriptionAr: "الحساب الرسمي على إنستغرام: صانع محتوى كروي بستايل كوميدي🤳 ✨حب ما تعمل حتى تعمل ما تحب✨ - ستوريات يومية وتحديثات حصرية.",
@@ -86,8 +123,8 @@ export const INITIAL_SOCIAL_PLATFORMS: SocialPlatform[] = [
     accentColor: "#E1306C",
     badgeAr: "حساب موثق",
     badgeFr: "Compte vérifié",
-    highlightsAr: "213K متابع · 865 يتابعهم · ستوريات يومية",
-    highlightsFr: "213K abonnés · 865 abonnements · Stories quotidiennes",
+    highlightsAr: "213K متابع · ستوريات يومية",
+    highlightsFr: "213K abonnés · Stories quotidiennes",
     directActionLabelAr: "متابعة على Instagram",
     directActionLabelFr: "Suivre sur Instagram",
     iconType: "instagram",
@@ -99,7 +136,7 @@ export const INITIAL_SOCIAL_PLATFORMS: SocialPlatform[] = [
     nameFr: "Facebook",
     handle: "Mehdi Pita",
     url: "https://www.facebook.com/profile.php?id=61563910933144",
-    followersCount: "113,000",
+    followersCount: "113K",
     followersRaw: 113000,
     followersLabelAr: "متابع فيسبوك (Followers)",
     followersLabelFr: "Abonnés Facebook",
@@ -124,7 +161,7 @@ export const INITIAL_SOCIAL_PLATFORMS: SocialPlatform[] = [
     nameFr: "YouTube",
     handle: "@Mehdipita",
     url: "https://www.youtube.com/@Mehdipita",
-    followersCount: "23,100",
+    followersCount: "23.1K",
     followersRaw: 23100,
     followersLabelAr: "مشترك (Subscribers)",
     followersLabelFr: "Abonnés (Subscribers)",
@@ -149,7 +186,7 @@ export const INITIAL_SOCIAL_PLATFORMS: SocialPlatform[] = [
     nameFr: "TikTok",
     handle: "@mehdi.piita",
     url: "https://www.tiktok.com/@mehdi.piita",
-    followersCount: "13,200",
+    followersCount: "13.2K",
     followersRaw: 13200,
     followersLabelAr: "متابع (Followers)",
     followersLabelFr: "Abonnés (Followers)",

@@ -1,26 +1,33 @@
 import React from 'react';
-import { Language } from '../data/influencerData';
+import { Language, SocialPlatform } from '../data/influencerData';
 
 interface MarqueeTickerProps {
   speed?: 'normal' | 'fast';
   lang?: Language;
   reverse?: boolean;
+  platforms?: SocialPlatform[];
 }
 
 export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({
   speed = 'normal',
   lang = 'ar',
-  reverse = false
+  reverse = false,
+  platforms
 }) => {
   const isAr = lang === 'ar';
+
+  const igCount = platforms?.find(p => p.id === 'instagram')?.followersCount || "213K";
+  const fbCount = platforms?.find(p => p.id === 'facebook')?.followersCount || "113K";
+  const ytCount = platforms?.find(p => p.id === 'youtube')?.followersCount || "23.1K";
+  const ttCount = platforms?.find(p => p.id === 'tiktok')?.followersCount || "13.2K";
 
   const items = isAr
     ? [
         "MEHDI PITA",
-        "إنستغرام: 213K متابع (865 يتابعهم)",
-        "فيسبوك: 113K متابع (MEHDI PITA)",
-        "يوتيوب: 23.1K مشترك (@MEHDIPITA)",
-        "تيك توك: 13.2K متابع (@MEHDI.PIITA)",
+        `إنستغرام: ${igCount} متابع (@mehdipita)`,
+        `فيسبوك: ${fbCount} متابع (MEHDI PITA)`,
+        `يوتيوب: ${ytCount} مشترك (@MEHDIPITA)`,
+        `تيك توك: ${ttCount} متابع (@MEHDI.PIITA)`,
         "صانع محتوى كروي بستايل كوميدي🤳",
         "✨حب ما تعمل حتى تعمل ما تحب✨",
         "- Mrmlaaaa9",
@@ -28,10 +35,10 @@ export const MarqueeTicker: React.FC<MarqueeTickerProps> = ({
       ]
     : [
         "MEHDI PITA",
-        "Instagram: 213K abonnés (865 abonnements)",
-        "Facebook: 113K abonnés (MEHDI PITA)",
-        "YouTube: 23.1K abonnés (@MEHDIPITA)",
-        "TikTok: 13.2K abonnés (@MEHDI.PIITA)",
+        `Instagram: ${igCount} abonnés (@mehdipita)`,
+        `Facebook: ${fbCount} abonnés (MEHDI PITA)`,
+        `YouTube: ${ytCount} abonnés (@MEHDIPITA)`,
+        `TikTok: ${ttCount} abonnés (@MEHDI.PIITA)`,
         "Créateur de contenu football & humour 🤳",
         "✨ Aime ce que tu fais jusqu'à ce que tu fasses ce que tu aimes ✨",
         "- Mrmlaaaa9",

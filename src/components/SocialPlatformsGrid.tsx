@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ExternalLink, Copy, Check, ShieldCheck, Users } from 'lucide-react';
-import { SocialPlatform, Language } from '../data/influencerData';
+import { SocialPlatform, Language, formatCompactNumber } from '../data/influencerData';
 import { PlatformIcon } from './BrandIcons';
 
 interface SocialPlatformsGridProps {
@@ -115,7 +115,7 @@ export const SocialPlatformsGrid: React.FC<SocialPlatformsGridProps> = ({
                   <div className="my-5 p-4 rounded-2xl bg-[#09071c]/90 border border-purple-500/30 group-hover:border-cyan-400/50 transition-colors">
                     <div className="flex items-baseline justify-between">
                       <div className="font-display text-3xl font-black bg-gradient-to-r from-violet-200 via-indigo-100 to-cyan-300 bg-clip-text text-transparent font-mono tabular-nums">
-                        {platform.followersCount}
+                        {formatCompactNumber(platform.followersCount)}
                       </div>
                       {platform.followingCountAr && (
                         <span className="text-[11px] font-bold text-pink-400 font-mono">
