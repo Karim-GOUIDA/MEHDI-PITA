@@ -8,8 +8,11 @@ interface DirectContactSectionProps {
   platforms?: SocialPlatform[];
 }
 
+const ONLINE_HYPE_BASE = 'https://countapi.mileshilliard.com/api/v1';
+const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
+
 export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang, platforms }) => {
-  // Starts from 0 and saves in a persistent variable
+  // Starts from 0 and syncs with online cloud counter
   const [hypeCount, setHypeCount] = useState<number>(() => {
     try {
       const saved = localStorage.getItem('pita_hype_counter');
@@ -18,7 +21,7 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
         return isNaN(parsed) ? 0 : parsed;
       }
     } catch {}
-    return 0; // Starts strictly from 0 as requested
+    return 0; // Starts strictly from 0
   });
 
   const [bursts, setBursts] = useState<{ id: number; x: number; y: number; emoji: string }[]>([]);
@@ -32,44 +35,65 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
 
   const emojis = ['🔥', '⚡', '⚽', '🏆', '💚', '👑'];
 
-  // Sync state across tabs and fetch cloud counter if available
+  // Real-time live online counter sync across ALL visitors worldwide
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchOnlineCount = async () => {
+      try {
+        const res = await fetch(`${ONLINE_HYPE_BASE}/get/${ONLINE_HYPE_KEY}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && typeof data.value === 'number' && isMounted) {
+            setHypeCount(data.value);
+            try {
+              localStorage.setItem('pita_hype_counter', String(data.value));
+            } catch {}
+          }
+        }
+      } catch {}
+    };
+
+    // 1. Initial fetch on load
+    fetchOnlineCount();
+
+    // 2. Poll every 3 seconds so whenever anyone clicks +1, everyone sees it increment live!
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchOnlineCount();
+      }
+    }, 3000);
+
+    // 3. Sync immediately when tab becomes visible
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchOnlineCount();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    // 4. Also listen to localStorage storage events across tabs in same browser
     const handleStorageChange = () => {
       try {
         const saved = localStorage.getItem('pita_hype_counter');
         if (saved !== null) {
           const parsed = parseInt(saved, 10);
-          if (!isNaN(parsed)) setHypeCount(parsed);
+          if (!isNaN(parsed) && isMounted) setHypeCount(parsed);
         }
       } catch {}
     };
-
     window.addEventListener('storage', handleStorageChange);
 
-    // Optional cross-visitor sync via free public counter API
-    let isMounted = true;
-    fetch('https://api.counterapi.dev/v1/mehdipita-official/hype')
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data && typeof data.count === 'number' && isMounted) {
-          const local = parseInt(localStorage.getItem('pita_hype_counter') || '0', 10);
-          const maxCount = Math.max(local, data.count);
-          setHypeCount(maxCount);
-          try {
-            localStorage.setItem('pita_hype_counter', String(maxCount));
-          } catch {}
-        }
-      })
-      .catch(() => {});
-
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
       isMounted = false;
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
-  const handleHype = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // 1. Immediately increment state and persist to localStorage variable
+  const handleHype = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    // 1. Immediate optimistic UI increment so clicking is instantly responsive
     setHypeCount((prev) => {
       const next = prev + 1;
       try {
@@ -79,9 +103,16 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
       return next;
     });
 
-    // 2. Fire and forget increment to cloud counter
+    // 2. Send real online hit to cloud server so all other users receive the increment
     try {
-      fetch('https://api.counterapi.dev/v1/mehdipita-official/hype/up').catch(() => {});
+      const res = await fetch(`${ONLINE_HYPE_BASE}/hit/${ONLINE_HYPE_KEY}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data.value === 'number') {
+          setHypeCount(data.value);
+          localStorage.setItem('pita_hype_counter', String(data.value));
+        }
+      }
     } catch {}
 
     const rect = e.currentTarget.getBoundingClientRect();

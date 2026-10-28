@@ -91,6 +91,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
     return currentVideos.map((v) => ({ ...v }));
   });
 
+const ONLINE_HYPE_BASE = 'https://countapi.mileshilliard.com/api/v1';
+const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
+
   // Hype / Force counter state (starts from 0 and saved in variable)
   const [adminHypeCount, setAdminHypeCount] = useState<number>(() => {
     try {
@@ -100,12 +103,30 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
     return 0;
   });
 
-  const handleUpdateHypeCount = (newCount: number) => {
+  // Fetch online real-time counter on mount
+  React.useEffect(() => {
+    fetch(`${ONLINE_HYPE_BASE}/get/${ONLINE_HYPE_KEY}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && typeof data.value === 'number') {
+          setAdminHypeCount(data.value);
+          localStorage.setItem('pita_hype_counter', String(data.value));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleUpdateHypeCount = async (newCount: number) => {
     const val = Math.max(0, newCount);
     setAdminHypeCount(val);
     try {
       localStorage.setItem('pita_hype_counter', String(val));
       window.dispatchEvent(new Event('storage'));
+    } catch {}
+
+    // Synchronize to online cloud database
+    try {
+      await fetch(`${ONLINE_HYPE_BASE}/set/${ONLINE_HYPE_KEY}?value=${val}`);
     } catch {}
   };
 
