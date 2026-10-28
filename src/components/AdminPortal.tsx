@@ -565,6 +565,32 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
       )}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-12">
+        {/* Real-time Global Cloud Sync Banner */}
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-950/70 via-indigo-950/60 to-cyan-950/40 border border-cyan-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0 border border-cyan-500/40">
+              <Globe className="w-5 h-5 animate-pulse text-cyan-300" />
+            </div>
+            <div>
+              <div className="text-sm font-black text-white flex items-center gap-2">
+                <span>{isAr ? 'المزامنة السحابية العالمية الفورية (Online Real-Time)' : 'Synchronisation Cloud Globale (Temps Réel)'}</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
+              </div>
+              <p className="text-xs text-zinc-300 mt-0.5">
+                {isAr
+                  ? 'أي تعديل في الأرقام أو الفيديوهات ينتشر فورياً عبر السحابة لجميع الزوار والأجهزة في العالم.'
+                  : 'Toutes les modifications se propagent instantanément via le cloud pour tous les visiteurs et navigateurs.'}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-xs font-mono font-bold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              {isAr ? 'متصل وحي (Live 0s)' : 'Connecté & En Direct (0s)'}
+            </span>
+          </div>
+        </div>
+
         {/* SECTION 1: FOLLOWER NUMBERS WITH FULL CONTROLS */}
         <section className="bg-[#0c0a22]/80 border border-purple-500/30 rounded-3xl p-6 sm:p-8 shadow-xl">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-purple-900/40">
