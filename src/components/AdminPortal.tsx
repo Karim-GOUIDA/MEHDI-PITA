@@ -41,7 +41,8 @@ interface AdminPortalProps {
   currentPlatforms: SocialPlatform[];
   currentVideos: RealVideo[];
   initialLang?: Language;
-  onSaveData: (data: { platforms: SocialPlatform[]; videos: RealVideo[] }) => void;
+  onLogin: (username: string, password: string) => Promise<boolean>;
+  onSaveData: (data: { platforms: SocialPlatform[]; videos: RealVideo[] }, password: string) => Promise<void>;
   onExit: () => void;
 }
 
@@ -49,6 +50,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   currentPlatforms,
   currentVideos,
   initialLang = 'fr',
+  onLogin,
   onSaveData,
   onExit
 }) => {
@@ -74,9 +76,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   const isAr = lang === 'ar';
 
   // Auth state
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return sessionStorage.getItem('pita_admin_auth') === 'true';
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -169,37 +169,51 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
     return isNaN(num) ? 0 : Math.round(num);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
 
     const cleanUser = username.trim().toLowerCase();
     const cleanPass = password.trim();
-
-    // Check login and password as requested: password (mrmla9)
     const validUsers = ['mrmla9', 'admin', 'pitadmin', 'mehdi'];
     const isValidUser = validUsers.includes(cleanUser) || cleanUser === '';
-    const isValidPass = cleanPass === 'mrmla9';
 
-    if (isValidUser && isValidPass) {
-      sessionStorage.setItem('pita_admin_auth', 'true');
-      setIsAuthenticated(true);
-      showToast(
-        isAr
-          ? "تم تسجيل الدخول بنجاح! مرحباً بك في لوحة تحكم MEHDI PITA."
-          : "Connexion réussie ! Bienvenue dans l'administration MEHDI PITA."
-      );
-    } else {
+    if (!isValidUser) {
       setAuthError(
         isAr
-          ? "اسم المستخدم أو كلمة المرور غير صحيحة (تلميح: كلمة المرور = mrmla9)"
-          : "Identifiant ou mot de passe incorrect (Indice: pass = mrmla9)"
+          ? 'اسم المستخدم أو كلمة المرور غير صحيحة.'
+          : 'Identifiant ou mot de passe incorrect.'
+      );
+      return;
+    }
+
+    try {
+      if (await onLogin(cleanUser, cleanPass)) {
+        setIsAuthenticated(true);
+        showToast(
+          isAr
+            ? "تم تسجيل الدخول بنجاح! مرحباً بك في لوحة تحكم MEHDI PITA."
+            : "Connexion réussie ! Bienvenue dans l'administration MEHDI PITA."
+        );
+      } else {
+        setAuthError(
+          isAr
+            ? 'اسم المستخدم أو كلمة المرور غير صحيحة.'
+            : 'Identifiant ou mot de passe incorrect.'
+        );
+      }
+    } catch (error) {
+      setAuthError(
+        error instanceof Error
+          ? error.message
+          : isAr
+            ? 'تعذر الاتصال بخدمة تسجيل الدخول.'
+            : "Impossible de joindre le service d'authentification."
       );
     }
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('pita_admin_auth');
     setIsAuthenticated(false);
     setUsername('');
     setPassword('');
@@ -212,6 +226,25 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
     }, 3500);
   };
 
+  const persistData = async (
+    data: { platforms: SocialPlatform[]; videos: RealVideo[] },
+    successMessage?: string
+  ): Promise<boolean> => {
+    try {
+      await onSaveData(data, password);
+      if (successMessage) showToast(successMessage);
+      return true;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      showToast(
+        isAr
+          ? `فشل حفظ التغييرات: ${message}`
+          : `Échec de l'enregistrement : ${message}`
+      );
+      return false;
+    }
+  };
+
   // Follower updates with immediate auto-sync
   const handleFollowerChange = (platformId: string, countStr: string) => {
     setPlatforms((prev) =>
@@ -219,13 +252,17 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
     );
   };
 
-  const handleFollowerBlur = (platformId: string) => {
+  const handleFollowerBlur = async (platformId: string) => {
     const formatted = platforms.map((p) =>
       p.id === platformId ? { ...p, followersCount: formatCompactNumber(p.followersCount) } : p
     );
     setPlatforms(formatted);
-    onSaveData({ platforms: formatted, videos });
-    showToast(isAr ? "تم تحديث العدد ونشره أونلاين لجميع المتصفحات 🌐" : "Nombre mis à jour en ligne pour tous les navigateurs 🌐");
+    await persistData(
+      { platforms: formatted, videos },
+      isAr
+        ? 'تم تحديث العدد ونشره أونلاين لجميع المتصفحات 🌐'
+        : 'Nombre mis à jour en ligne pour tous les navigateurs 🌐'
+    );
   };
 
   // Interactive controls for follower numbers
@@ -240,7 +277,7 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
       };
     });
     setPlatforms(nextList);
-    onSaveData({ platforms: nextList, videos });
+    void persistData({ platforms: nextList, videos });
   };
 
   const handleFormatStyle = (platformId: string, style: 'compact' | 'separated' | 'raw') => {
@@ -258,7 +295,7 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
       return { ...p, followersCount: val };
     });
     setPlatforms(nextList);
-    onSaveData({ platforms: nextList, videos });
+    void persistData({ platforms: nextList, videos });
   };
 
   const handleClearFollowers = (platformId: string) => {
@@ -266,7 +303,7 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
       p.id === platformId ? { ...p, followersCount: '0' } : p
     );
     setPlatforms(nextList);
-    onSaveData({ platforms: nextList, videos });
+    void persistData({ platforms: nextList, videos });
   };
 
   // Video Management
@@ -307,9 +344,8 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
     setShowAddModal(false);
 
     // Auto-save online immediately
-    onSaveData({ platforms, videos: updatedVideos });
-
-    showToast(
+    void persistData(
+      { platforms, videos: updatedVideos },
       isAr
         ? "تمت إضافة الفيديو وحفظه أونلاين على السيرفر بنجاح! 🚀"
         : "Vidéo ajoutée et synchronisée en ligne avec succès ! 🚀"
@@ -319,8 +355,10 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
   const handleDeleteVideo = (id: string) => {
     const updatedVideos = videos.filter((v) => v.id !== id);
     setVideos(updatedVideos);
-    onSaveData({ platforms, videos: updatedVideos });
-    showToast(isAr ? "تم حذف الفيديو وتحديث الموقع أونلاين." : "Vidéo retirée et mise à jour en ligne.");
+    void persistData(
+      { platforms, videos: updatedVideos },
+      isAr ? 'تم حذف الفيديو وتحديث الموقع أونلاين.' : 'Vidéo retirée et mise à jour en ligne.'
+    );
   };
 
   const handleMoveVideo = (index: number, direction: 'up' | 'down') => {
@@ -330,31 +368,35 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
     const [moved] = copy.splice(index, 1);
     copy.splice(targetIndex, 0, moved);
     setVideos(copy);
-    onSaveData({ platforms, videos: copy });
+    void persistData({ platforms, videos: copy });
   };
 
-  const handleSaveAll = () => {
+  const handleSaveAll = async () => {
     const formattedPlatforms = platforms.map((p) => ({
       ...p,
       followersCount: formatCompactNumber(p.followersCount)
     }));
     setPlatforms(formattedPlatforms);
-    onSaveData({ platforms: formattedPlatforms, videos });
-    showToast(
+    await persistData(
+      { platforms: formattedPlatforms, videos },
       isAr
-        ? "تم حفظ وتحديث الأرقام والفيديوهات أونلاين على السيرفر مباشرة لجميع الزوار! 🌐"
-        : "Toutes les données ont été enregistrées en ligne pour tous les visiteurs ! 🌐"
+        ? 'تم حفظ وتحديث الأرقام والفيديوهات أونلاين على السيرفر مباشرة لجميع الزوار! 🌐'
+        : 'Toutes les données ont été enregistrées en ligne pour tous les visiteurs ! 🌐'
     );
   };
 
   const handleResetDefaults = () => {
     setPlatforms(INITIAL_SOCIAL_PLATFORMS.map((p) => ({ ...p })));
     setVideos(REAL_YOUTUBE_VIDEOS.map((v) => ({ ...v })));
-    onSaveData({
-      platforms: INITIAL_SOCIAL_PLATFORMS,
-      videos: REAL_YOUTUBE_VIDEOS
-    });
-    showToast(isAr ? "تمت استعادة القيم الافتراضية وحفظها أونلاين بنجاح." : "Valeurs par défaut restaurées en ligne avec succès.");
+    void persistData(
+      {
+        platforms: INITIAL_SOCIAL_PLATFORMS,
+        videos: REAL_YOUTUBE_VIDEOS
+      },
+      isAr
+        ? 'تمت استعادة القيم الافتراضية وحفظها أونلاين بنجاح.'
+        : 'Valeurs par défaut restaurées en ligne avec succès.'
+    );
   };
 
   // Back icon according to direction
@@ -527,13 +569,14 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
             </button>
 
             <button
-              onClick={() => {
+              onClick={async () => {
                 const formattedPlatforms = platforms.map((p) => ({
                   ...p,
                   followersCount: formatCompactNumber(p.followersCount)
                 }));
-                onSaveData({ platforms: formattedPlatforms, videos });
-                onExit();
+                if (await persistData({ platforms: formattedPlatforms, videos })) {
+                  onExit();
+                }
               }}
               className="px-3 sm:px-4 py-2 sm:py-2.5 bg-purple-950/60 hover:bg-purple-900/80 border border-purple-700/50 text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center gap-2 cursor-pointer"
             >

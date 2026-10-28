@@ -21,7 +21,7 @@ import {
   INITIAL_SOCIAL_PLATFORMS,
   REAL_YOUTUBE_VIDEOS
 } from './data/influencerData';
-import { fetchOnlineData, saveOnlineData } from './services/apiService';
+import { authenticateAdmin, fetchOnlineData, saveOnlineData } from './services/apiService';
 import { Check } from 'lucide-react';
 
 const checkIsAdminPath = (): boolean => {
@@ -141,16 +141,13 @@ export default function App() {
     };
   }, []);
 
-  const handleSaveData = async (newData: { platforms: SocialPlatform[]; videos: RealVideo[] }) => {
-    // 1. Instant local update
+  const handleSaveData = async (
+    newData: { platforms: SocialPlatform[]; videos: RealVideo[] },
+    password: string
+  ) => {
     setPlatforms(newData.platforms);
     setVideos(newData.videos);
-
-    // 2. Persist to server online database for all visitors worldwide
-    await saveOnlineData({
-      platforms: newData.platforms,
-      videos: newData.videos
-    });
+    await saveOnlineData(newData, password);
   };
 
   const handleExitAdmin = () => {
@@ -195,6 +192,7 @@ export default function App() {
         currentPlatforms={platforms}
         currentVideos={videos}
         initialLang={lang}
+        onLogin={authenticateAdmin}
         onSaveData={handleSaveData}
         onExit={handleExitAdmin}
       />

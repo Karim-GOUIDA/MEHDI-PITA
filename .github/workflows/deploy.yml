@@ -32,6 +32,8 @@ jobs:
         run: npm ci
 
       - name: Build project
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
         run: npm run build
 
       - name: Configure GitHub Pages

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
@@ -79,9 +80,16 @@ async function startServer() {
   app.post('/api/data', (req, res) => {
     try {
       const { platforms, videos, hypeCount, password } = req.body;
+      const adminPassword = process.env.ADMIN_PASSWORD;
 
-      // Optional authorization check: If password is provided, enforce valid admin credential
-      if (password && password !== 'mrmla9') {
+      if (!adminPassword) {
+        return res.status(503).json({
+          success: false,
+          error: 'Admin writes are not configured on this server'
+        });
+      }
+
+      if (typeof password !== 'string' || password !== adminPassword) {
         return res.status(401).json({
           success: false,
           error: 'Unauthorized: Invalid admin credentials'
