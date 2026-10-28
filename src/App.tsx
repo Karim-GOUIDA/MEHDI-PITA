@@ -72,29 +72,32 @@ export default function App() {
     return REAL_YOUTUBE_VIDEOS;
   });
 
-  // Fetch online data on mount and sync periodically across all connected clients
+  // Fetch online data on mount and sync periodically across all connected clients in real-time
   useEffect(() => {
     let isSubscribed = true;
 
     const syncWithServer = async () => {
+      // Don't overwrite if admin is actively in the admin portal editing
+      if (isAdminView) return;
+
       const online = await fetchOnlineData();
       if (!isSubscribed || !online) return;
 
       if (Array.isArray(online.platforms) && online.platforms.length > 0) {
         setPlatforms(online.platforms);
       }
-      if (Array.isArray(online.videos)) {
+      if (Array.isArray(online.videos) && online.videos.length > 0) {
         setVideos(online.videos);
       }
     };
 
-    // Initial sync
+    // Initial immediate sync
     syncWithServer();
 
-    // Periodic live sync every 8 seconds so visitors see admin updates in real-time
-    const interval = setInterval(syncWithServer, 8000);
+    // Fast live sync every 4 seconds so any other browser/visitor sees changes in real-time
+    const interval = setInterval(syncWithServer, 4000);
 
-    // Sync on tab focus / visibility change
+    // Sync when tab becomes visible or focused
     const handleFocus = () => {
       if (document.visibilityState === 'visible') {
         syncWithServer();
@@ -109,7 +112,7 @@ export default function App() {
       window.removeEventListener('focus', handleFocus);
       document.removeEventListener('visibilitychange', handleFocus);
     };
-  }, []);
+  }, [isAdminView]);
 
   // URL / route listener for /pitadmin and #/pitadmin
   useEffect(() => {

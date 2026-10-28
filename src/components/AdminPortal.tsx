@@ -212,50 +212,61 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
     }, 3500);
   };
 
-  // Follower updates
+  // Follower updates with immediate auto-sync
   const handleFollowerChange = (platformId: string, countStr: string) => {
     setPlatforms((prev) =>
       prev.map((p) => (p.id === platformId ? { ...p, followersCount: countStr } : p))
     );
   };
 
+  const handleFollowerBlur = (platformId: string) => {
+    const formatted = platforms.map((p) =>
+      p.id === platformId ? { ...p, followersCount: formatCompactNumber(p.followersCount) } : p
+    );
+    setPlatforms(formatted);
+    onSaveData({ platforms: formatted, videos });
+    showToast(isAr ? "تم تحديث العدد ونشره أونلاين لجميع المتصفحات 🌐" : "Nombre mis à jour en ligne pour tous les navigateurs 🌐");
+  };
+
   // Interactive controls for follower numbers
   const handleStepFollowers = (platformId: string, delta: number) => {
-    setPlatforms((prev) =>
-      prev.map((p) => {
-        if (p.id !== platformId) return p;
-        const current = parseFollowerNumber(p.followersCount);
-        const next = Math.max(0, current + delta);
-        return {
-          ...p,
-          followersCount: formatCompactNumber(next)
-        };
-      })
-    );
+    const nextList = platforms.map((p) => {
+      if (p.id !== platformId) return p;
+      const current = parseFollowerNumber(p.followersCount);
+      const next = Math.max(0, current + delta);
+      return {
+        ...p,
+        followersCount: formatCompactNumber(next)
+      };
+    });
+    setPlatforms(nextList);
+    onSaveData({ platforms: nextList, videos });
   };
 
   const handleFormatStyle = (platformId: string, style: 'compact' | 'separated' | 'raw') => {
-    setPlatforms((prev) =>
-      prev.map((p) => {
-        if (p.id !== platformId) return p;
-        const num = parseFollowerNumber(p.followersCount);
-        let val = p.followersCount;
-        if (style === 'compact') {
-          val = formatCompactNumber(num);
-        } else if (style === 'separated') {
-          val = num.toLocaleString('en-US');
-        } else if (style === 'raw') {
-          val = String(num);
-        }
-        return { ...p, followersCount: val };
-      })
-    );
+    const nextList = platforms.map((p) => {
+      if (p.id !== platformId) return p;
+      const num = parseFollowerNumber(p.followersCount);
+      let val = p.followersCount;
+      if (style === 'compact') {
+        val = formatCompactNumber(num);
+      } else if (style === 'separated') {
+        val = num.toLocaleString('en-US');
+      } else if (style === 'raw') {
+        val = String(num);
+      }
+      return { ...p, followersCount: val };
+    });
+    setPlatforms(nextList);
+    onSaveData({ platforms: nextList, videos });
   };
 
   const handleClearFollowers = (platformId: string) => {
-    setPlatforms((prev) =>
-      prev.map((p) => (p.id === platformId ? { ...p, followersCount: '0' } : p))
+    const nextList = platforms.map((p) =>
+      p.id === platformId ? { ...p, followersCount: '0' } : p
     );
+    setPlatforms(nextList);
+    onSaveData({ platforms: nextList, videos });
   };
 
   // Video Management
@@ -516,7 +527,14 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
             </button>
 
             <button
-              onClick={onExit}
+              onClick={() => {
+                const formattedPlatforms = platforms.map((p) => ({
+                  ...p,
+                  followersCount: formatCompactNumber(p.followersCount)
+                }));
+                onSaveData({ platforms: formattedPlatforms, videos });
+                onExit();
+              }}
               className="px-3 sm:px-4 py-2 sm:py-2.5 bg-purple-950/60 hover:bg-purple-900/80 border border-purple-700/50 text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center gap-2 cursor-pointer"
             >
               <BackIcon className="w-4 h-4" />
@@ -637,6 +655,12 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
                           type="text"
                           value={platform.followersCount}
                           onChange={(e) => handleFollowerChange(platform.id, e.target.value)}
+                          onBlur={() => handleFollowerBlur(platform.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              (e.target as HTMLInputElement).blur();
+                            }
+                          }}
                           className="w-full h-11 px-3.5 rounded-xl bg-[#09071c] border-2 border-purple-500/40 focus:border-cyan-400 text-cyan-300 font-mono font-black text-base focus:outline-none transition-colors text-center"
                         />
                       </div>
