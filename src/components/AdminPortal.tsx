@@ -24,7 +24,8 @@ import {
   X,
   SlidersHorizontal,
   Sparkles,
-  Globe
+  Globe,
+  Flame
 } from 'lucide-react';
 import {
   SocialPlatform,
@@ -89,6 +90,24 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   const [videos, setVideos] = useState<RealVideo[]>(() => {
     return currentVideos.map((v) => ({ ...v }));
   });
+
+  // Hype / Force counter state (starts from 0 and saved in variable)
+  const [adminHypeCount, setAdminHypeCount] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('pita_hype_counter');
+      return saved !== null ? parseInt(saved, 10) || 0 : 0;
+    } catch {}
+    return 0;
+  });
+
+  const handleUpdateHypeCount = (newCount: number) => {
+    const val = Math.max(0, newCount);
+    setAdminHypeCount(val);
+    try {
+      localStorage.setItem('pita_hype_counter', String(val));
+      window.dispatchEvent(new Event('storage'));
+    } catch {}
+  };
 
   // UI state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -720,6 +739,78 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 </div>
               );
             })}
+          </div>
+
+          {/* HYPE COUNTER MANAGER */}
+          <div className="mt-8 pt-6 border-t border-purple-900/50 p-5 rounded-2xl bg-[#120e30] border border-purple-500/30 flex flex-col sm:flex-row items-center justify-between gap-5">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center shrink-0 shadow-lg shadow-orange-600/30">
+                <Flame className="w-6 h-6 animate-pulse fill-current" />
+              </div>
+              <div>
+                <div className="font-bold text-sm text-white font-mono flex items-center gap-2">
+                  <span>{isAr ? 'عداد حماس وتشجيع الجمهور (الحماس)' : 'Compteur de force & soutien (Hype)'}</span>
+                  <span className="text-xs px-2 py-0.5 rounded-md bg-orange-950/80 border border-orange-500/40 text-orange-300 font-mono">
+                    {adminHypeCount.toLocaleString()}
+                  </span>
+                </div>
+                <div className="text-xs text-zinc-400 mt-0.5">
+                  {isAr
+                    ? 'يبدأ من 0 ويتم حفظ كل نقرة تلقائياً في متغير دائم.'
+                    : 'Démarre de 0 et enregistre chaque clic dans une variable persistante.'}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap justify-end w-full sm:w-auto" dir="ltr">
+              <button
+                type="button"
+                onClick={() => handleUpdateHypeCount(adminHypeCount - 1)}
+                className="p-2 rounded-xl bg-purple-950/70 hover:bg-purple-900 border border-purple-500/40 text-cyan-300 cursor-pointer"
+                title="-1"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleUpdateHypeCount(adminHypeCount + 1)}
+                className="p-2 rounded-xl bg-purple-950/70 hover:bg-purple-900 border border-purple-500/40 text-cyan-300 cursor-pointer"
+                title="+1"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleUpdateHypeCount(adminHypeCount + 10)}
+                className="px-2.5 py-1.5 rounded-xl bg-emerald-950/50 hover:bg-emerald-900 border border-emerald-600/40 text-emerald-300 text-xs font-mono font-bold cursor-pointer"
+              >
+                +10
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleUpdateHypeCount(adminHypeCount + 100)}
+                className="px-2.5 py-1.5 rounded-xl bg-emerald-950/50 hover:bg-emerald-900 border border-emerald-600/40 text-emerald-300 text-xs font-mono font-bold cursor-pointer"
+              >
+                +100
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm(isAr ? 'هل أنت متأكد من تصفير عداد الحماس إلى 0؟' : 'Voulez-vous réinitialiser le compteur de force à 0 ?')) {
+                    handleUpdateHypeCount(0);
+                    showToast(isAr ? 'تم تصفير عداد الحماس إلى 0.' : 'Compteur de force réinitialisé à 0.');
+                  }
+                }}
+                className="px-3 py-1.5 rounded-xl bg-red-950/50 hover:bg-red-900/70 border border-red-800/40 text-red-300 text-xs font-mono font-bold cursor-pointer flex items-center gap-1"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>{isAr ? 'تصفير (0)' : 'Reset (0)'}</span>
+              </button>
+            </div>
           </div>
         </section>
 
