@@ -24,7 +24,13 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               <span className="font-display text-2xl font-black tracking-tight uppercase bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent font-mono">
                 {INFLUENCER_PROFILE.name}
               </span>
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
+              <a
+                href="#/pitadmin"
+                className="text-cyan-400 hover:text-cyan-300 transition-colors p-0.5 cursor-pointer"
+                title="Admin"
+              >
+                <ShieldCheck className="w-4 h-4" />
+              </a>
             </div>
             <p className="text-sm font-bold text-amber-300 mb-1">
               {isAr ? INFLUENCER_PROFILE.mottoAr : INFLUENCER_PROFILE.mottoFr}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MEHDI PITA | Redirection...</title>
+    <script type="text/javascript">
+      // GitHub Pages SPA Single-Page-App routing trick:
+      // When a user lands on a deep URL on GitHub Pages (e.g. /MEHDI-PITA/pitadmin),
+      // GitHub Pages serves this 404.html file.
+      // We detect the path and redirect to the index page with the route in the hash or query string.
+      var path = window.location.pathname;
+      var search = window.location.search || '';
+      var hash = window.location.hash || '';
+
+      // Find the repository segment if deployed on GitHub Pages (e.g., /MEHDI-PITA/)
+      var pathSegments = path.split('/').filter(Boolean);
+      var isRepoSubdir = pathSegments.length > 0 && pathSegments[0].toLowerCase() === 'mehdi-pita';
+      var repoBase = isRepoSubdir ? '/' + pathSegments[0] + '/' : '/';
+
+      if (path.toLowerCase().indexOf('pitadmin') !== -1) {
+        // Redirect to hash route #/pitadmin which always works on GitHub Pages
+        window.location.replace(repoBase + '#/pitadmin' + search);
+      } else {
+        // Fallback redirect to homepage
+        window.location.replace(repoBase + hash);
+      }
+    </script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #070614;
+        color: #e4e4e7;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+      }
+      .card {
+        padding: 32px;
+        background: #0d0b24;
+        border: 1px solid rgba(168, 85, 247, 0.4);
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        max-width: 400px;
+        margin: 20px;
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 26px;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -0.5px;
+      }
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: #00f2fe;
+      }
+      a {
+        display: inline-block;
+        margin-top: 16px;
+        color: #fff;
+        background: linear-gradient(135deg, #7c3aed, #06b6d4);
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>MEHDI PITA</h1>
+      <p>Redirection vers l'espace d'administration...</p>
+      <a href="./#/pitadmin">Cliquez ici si la redirection ne démarre pas</a>
+    </div>
+  </body>
+</html>

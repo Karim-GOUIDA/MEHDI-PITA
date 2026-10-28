@@ -27,10 +27,18 @@ const checkIsAdminPath = (): boolean => {
   if (typeof window === 'undefined') return false;
   const path = window.location.pathname.toLowerCase().replace(/\/$/, '');
   const hash = window.location.hash.toLowerCase().replace(/\/$/, '');
+  const search = window.location.search.toLowerCase();
+
   return (
     path.endsWith('/pitadmin') ||
+    path.includes('/pitadmin') ||
+    path.includes('pitadmin') ||
+    hash.includes('pitadmin') ||
     hash === '#/pitadmin' ||
-    hash === '#pitadmin'
+    hash === '#pitadmin' ||
+    search.includes('pitadmin') ||
+    search.includes('p=/pitadmin') ||
+    search.includes('page=pitadmin')
   );
 };
 
@@ -69,11 +77,24 @@ export default function App() {
       setIsAdminView(checkIsAdminPath());
     };
 
+    // Secret shortcut: Alt + P to open admin directly
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.altKey && e.key.toLowerCase() === 'p') ||
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p')
+      ) {
+        e.preventDefault();
+        window.location.hash = '#/pitadmin';
+      }
+    };
+
     window.addEventListener('popstate', handleLocationChange);
     window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('popstate', handleLocationChange);
       window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -93,8 +114,13 @@ export default function App() {
     if (window.location.hash.includes('pitadmin')) {
       window.location.hash = '';
     }
-    if (window.location.pathname.includes('/pitadmin')) {
-      const newPath = window.location.pathname.replace(/\/pitadmin\/?$/, '') || '/';
+    if (window.location.search.includes('pitadmin')) {
+      const cleanSearch = window.location.search.replace(/[?&]p(itadmin)?(=[^&]*)?/gi, '');
+      const newUrl = window.location.pathname + (cleanSearch ? '?' + cleanSearch : '');
+      window.history.pushState(null, '', newUrl);
+    }
+    if (window.location.pathname.includes('/pitadmin') || window.location.pathname.includes('pitadmin')) {
+      const newPath = window.location.pathname.replace(/\/pitadmin\/?$/i, '') || '/';
       window.history.pushState(null, '', newPath);
     }
   };

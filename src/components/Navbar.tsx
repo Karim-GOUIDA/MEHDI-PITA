@@ -39,15 +39,21 @@ export const Navbar: React.FC<NavbarProps> = ({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 sm:gap-6">
         {/* Brand Name: ALWAYS MEHDI PITA ONLY */}
-        <a
-          href="#"
-          className="flex items-center gap-2 group whitespace-nowrap shrink-0 focus:outline-none"
-        >
-          <span className="font-display text-2xl sm:text-3xl font-black tracking-tight uppercase bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent group-hover:from-violet-300 group-hover:to-cyan-200 transition-all font-mono">
+        <div className="flex items-center gap-2 group whitespace-nowrap shrink-0">
+          <a
+            href="#"
+            className="font-display text-2xl sm:text-3xl font-black tracking-tight uppercase bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent hover:from-violet-300 hover:to-cyan-200 transition-all font-mono focus:outline-none"
+          >
             MEHDI PITA
-          </span>
-          <BadgeCheck className="w-5 h-5 text-cyan-400 shrink-0" aria-label="Verified" />
-        </a>
+          </a>
+          <a
+            href="#/pitadmin"
+            className="text-cyan-400 hover:text-cyan-300 transition-colors p-0.5 cursor-pointer"
+            title="Admin"
+          >
+            <BadgeCheck className="w-5 h-5 shrink-0" aria-label="Verified" />
+          </a>
+        </div>
 
         {/* Nav Links */}
         <nav className="hidden md:flex items-center gap-7 text-sm font-bold text-zinc-300">
