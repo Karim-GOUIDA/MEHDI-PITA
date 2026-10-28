@@ -263,7 +263,7 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
     e.preventDefault();
     const yId = extractYoutubeId(newVideoUrl);
     if (!yId) {
-      alert(
+      showToast(
         isAr
           ? "يرجى إدخال رابط يوتيوب صحيح أو معرّف فيديو صالح يتكون من 11 حرفاً"
           : "Veuillez entrer une URL YouTube valide ou un ID à 11 caractères (ex: DZbqU14j3bI)"
@@ -288,40 +288,38 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
       tagFr: tag
     };
 
-    setVideos((prev) => [newVid, ...prev]);
+    const updatedVideos = [newVid, ...videos];
+    setVideos(updatedVideos);
     setNewVideoUrl('');
     setNewVideoTitle('');
     setNewVideoTitleFr('');
     setShowAddModal(false);
+
+    // Auto-save online immediately
+    onSaveData({ platforms, videos: updatedVideos });
+
     showToast(
       isAr
-        ? "تمت إضافة الفيديو الجديد بنجاح! تذكّر حفظ التغييرات."
-        : "Nouvelle vidéo ajoutée avec succès ! Pensez à enregistrer."
+        ? "تمت إضافة الفيديو وحفظه أونلاين على السيرفر بنجاح! 🚀"
+        : "Vidéo ajoutée et synchronisée en ligne avec succès ! 🚀"
     );
   };
 
   const handleDeleteVideo = (id: string) => {
-    if (
-      confirm(
-        isAr
-          ? "هل أنت متأكد من رغبتك في حذف هذا الفيديو من الموقع؟"
-          : "Voulez-vous vraiment retirer cette vidéo ?"
-      )
-    ) {
-      setVideos((prev) => prev.filter((v) => v.id !== id));
-      showToast(isAr ? "تم حذف الفيديو من القائمة." : "Vidéo retirée de la liste.");
-    }
+    const updatedVideos = videos.filter((v) => v.id !== id);
+    setVideos(updatedVideos);
+    onSaveData({ platforms, videos: updatedVideos });
+    showToast(isAr ? "تم حذف الفيديو وتحديث الموقع أونلاين." : "Vidéo retirée et mise à jour en ligne.");
   };
 
   const handleMoveVideo = (index: number, direction: 'up' | 'down') => {
-    setVideos((prev) => {
-      const copy = [...prev];
-      const targetIndex = direction === 'up' ? index - 1 : index + 1;
-      if (targetIndex < 0 || targetIndex >= copy.length) return prev;
-      const [moved] = copy.splice(index, 1);
-      copy.splice(targetIndex, 0, moved);
-      return copy;
-    });
+    const copy = [...videos];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= copy.length) return;
+    const [moved] = copy.splice(index, 1);
+    copy.splice(targetIndex, 0, moved);
+    setVideos(copy);
+    onSaveData({ platforms, videos: copy });
   };
 
   const handleSaveAll = () => {
@@ -333,27 +331,19 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
     onSaveData({ platforms: formattedPlatforms, videos });
     showToast(
       isAr
-        ? "تم حفظ جميع التعديلات بنجاح ونشرها على الموقع!"
-        : "Toutes les modifications ont été enregistrées avec succès !"
+        ? "تم حفظ وتحديث الأرقام والفيديوهات أونلاين على السيرفر مباشرة لجميع الزوار! 🌐"
+        : "Toutes les données ont été enregistrées en ligne pour tous les visiteurs ! 🌐"
     );
   };
 
   const handleResetDefaults = () => {
-    if (
-      confirm(
-        isAr
-          ? "هل تريد استعادة الإحصائيات والفيديوهات الأصلية الافتراضية؟ سيؤدي ذلك إلى استبدال تغييراتك."
-          : "Voulez-vous restaurer les statistiques et vidéos par défaut d'origine ? Cette action écrasera vos modifications personnalisées."
-      )
-    ) {
-      setPlatforms(INITIAL_SOCIAL_PLATFORMS.map((p) => ({ ...p })));
-      setVideos(REAL_YOUTUBE_VIDEOS.map((v) => ({ ...v })));
-      onSaveData({
-        platforms: INITIAL_SOCIAL_PLATFORMS,
-        videos: REAL_YOUTUBE_VIDEOS
-      });
-      showToast(isAr ? "تمت استعادة القيم الافتراضية بنجاح." : "Valeurs par défaut restaurées avec succès.");
-    }
+    setPlatforms(INITIAL_SOCIAL_PLATFORMS.map((p) => ({ ...p })));
+    setVideos(REAL_YOUTUBE_VIDEOS.map((v) => ({ ...v })));
+    onSaveData({
+      platforms: INITIAL_SOCIAL_PLATFORMS,
+      videos: REAL_YOUTUBE_VIDEOS
+    });
+    showToast(isAr ? "تمت استعادة القيم الافتراضية وحفظها أونلاين بنجاح." : "Valeurs par défaut restaurées en ligne avec succès.");
   };
 
   // Back icon according to direction
@@ -486,18 +476,22 @@ const ONLINE_HYPE_KEY = 'mehdipita_official_hype_v1';
               MP
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-display font-black text-lg text-white font-mono">
                   MEHDI PITA
                 </span>
                 <span className="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 text-[10px] font-bold font-mono border border-cyan-500/40" dir="ltr">
                   /pitadmin
                 </span>
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-[10px] font-bold text-emerald-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  {isAr ? 'متصل بالسيرفر (تحديث مباشر أونلاين)' : 'En ligne (Synchro direct)'}
+                </span>
               </div>
               <span className="text-xs text-zinc-400">
                 {isAr
-                  ? 'لوحة التحكم الرسمية (الفيديوهات والمتابعون)'
-                  : 'Panneau de gestion officiel (Vidéos & Abonnés)'}
+                  ? 'لوحة التحكم الرسمية — التغييرات تحفظ مباشرة أونلاين لجميع زوار الموقع'
+                  : 'Panneau officiel — Les changements sont sauvegardés en direct pour tous les visiteurs'}
               </span>
             </div>
           </div>

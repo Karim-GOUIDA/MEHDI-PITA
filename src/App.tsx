@@ -21,6 +21,7 @@ import {
   INITIAL_SOCIAL_PLATFORMS,
   REAL_YOUTUBE_VIDEOS
 } from './data/influencerData';
+import { fetchOnlineData, saveOnlineData } from './services/apiService';
 import { Check } from 'lucide-react';
 
 const checkIsAdminPath = (): boolean => {
@@ -71,6 +72,45 @@ export default function App() {
     return REAL_YOUTUBE_VIDEOS;
   });
 
+  // Fetch online data on mount and sync periodically across all connected clients
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const syncWithServer = async () => {
+      const online = await fetchOnlineData();
+      if (!isSubscribed || !online) return;
+
+      if (Array.isArray(online.platforms) && online.platforms.length > 0) {
+        setPlatforms(online.platforms);
+      }
+      if (Array.isArray(online.videos)) {
+        setVideos(online.videos);
+      }
+    };
+
+    // Initial sync
+    syncWithServer();
+
+    // Periodic live sync every 8 seconds so visitors see admin updates in real-time
+    const interval = setInterval(syncWithServer, 8000);
+
+    // Sync on tab focus / visibility change
+    const handleFocus = () => {
+      if (document.visibilityState === 'visible') {
+        syncWithServer();
+      }
+    };
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleFocus);
+
+    return () => {
+      isSubscribed = false;
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleFocus);
+    };
+  }, []);
+
   // URL / route listener for /pitadmin and #/pitadmin
   useEffect(() => {
     const handleLocationChange = () => {
@@ -98,15 +138,16 @@ export default function App() {
     };
   }, []);
 
-  const handleSaveData = (newData: { platforms: SocialPlatform[]; videos: RealVideo[] }) => {
+  const handleSaveData = async (newData: { platforms: SocialPlatform[]; videos: RealVideo[] }) => {
+    // 1. Instant local update
     setPlatforms(newData.platforms);
     setVideos(newData.videos);
-    try {
-      localStorage.setItem('pita_custom_platforms', JSON.stringify(newData.platforms));
-      localStorage.setItem('pita_custom_videos', JSON.stringify(newData.videos));
-    } catch (e) {
-      console.error('Failed to save to localStorage', e);
-    }
+
+    // 2. Persist to server online database for all visitors worldwide
+    await saveOnlineData({
+      platforms: newData.platforms,
+      videos: newData.videos
+    });
   };
 
   const handleExitAdmin = () => {

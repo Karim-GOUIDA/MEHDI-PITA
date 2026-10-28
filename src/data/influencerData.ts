@@ -50,7 +50,7 @@ export const INFLUENCER_PROFILE = {
   roleAr: "صانع محتوى كروي بستايل كوميدي🤳",
   roleFr: "Créateur de contenu football & humour 🤳",
   mottoAr: "✨حب ما تعمل حتى تعمل ما تحب✨",
-  mottoFr: "✨ Aime ce que tu fais jusqu'à ce que tu fasses ce que tu aimes ✨",
+  mottoFr: "✨ Aime ce que tu fais jusqu'à ce que tu fasses ce que tu aimes\u00A0✨",
   slogan: "- Mrmlaaaa9",
   bioAr: "صانع محتوى كروي بستايل كوميدي🤳 ✨حب ما تعمل حتى تعمل ما تحب✨ . أهلاً بكم في الموقع الرسمي لمتابعة أحدث البثوث الكروية، المقاطع الكوميدية، وردود الفعل المباشرة على جميع المنصات.",
   bioFr: "Créateur de contenu football & humour 🤳 ✨ Aime ce que tu fais jusqu'à ce que tu fasses ce que tu aimes ✨ . Bienvenue sur le hub officiel pour suivre tous les streams, vidéos virales et réactions en direct.",

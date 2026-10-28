@@ -41,8 +41,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Typographic and Content Column */}
-          <div className="md:col-span-7 flex flex-col justify-center">
+          {/* Typographic and Content Column - Expanded space */}
+          <div className="md:col-span-7 lg:col-span-8 flex flex-col justify-center">
             {/* Verified Creator Tag */}
             <div className="flex flex-wrap items-center gap-2 mb-4">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-950/60 border border-purple-500/40 text-xs font-bold text-cyan-300 shadow-md">
@@ -72,7 +72,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="inline-block px-3.5 py-1.5 rounded-xl bg-purple-950/60 border border-purple-500/30 text-cyan-300 font-bold text-sm">
                 {isAr ? INFLUENCER_PROFILE.roleAr : INFLUENCER_PROFILE.roleFr}
               </div>
-              <p className="text-xl sm:text-2xl font-black text-amber-300 font-display">
+              <p className="text-xl sm:text-2xl font-black text-amber-300 font-display lg:whitespace-nowrap max-w-full">
                 {isAr ? INFLUENCER_PROFILE.mottoAr : INFLUENCER_PROFILE.mottoFr}
               </p>
               <div className="text-sm font-bold text-purple-300/90 font-mono">
@@ -151,7 +151,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Photo & Clean Instagram Card Column */}
-          <div className="md:col-span-5 flex flex-col items-center justify-center w-full mt-6 md:mt-0">
+          <div className="md:col-span-5 lg:col-span-4 flex flex-col items-center justify-center w-full mt-6 md:mt-0">
             <div className="relative w-full max-w-[340px] sm:max-w-sm md:max-w-full lg:max-w-md mx-auto">
               {/* Outer decorative glowing ring */}
               <div className="absolute -inset-2 bg-gradient-to-tr from-violet-600 via-cyan-500 to-pink-500 rounded-3xl blur-xl opacity-60 group-hover:opacity-90 transition-opacity pointer-events-none" />

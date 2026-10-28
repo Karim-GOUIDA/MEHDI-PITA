@@ -19,7 +19,7 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-purple-950/80">
           {/* Brand info */}
-          <div className="md:col-span-6">
+          <div className="md:col-span-7">
             <div className="flex items-center gap-2 mb-3">
               <span className="font-display text-2xl font-black tracking-tight uppercase bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent font-mono">
                 {INFLUENCER_PROFILE.name}
@@ -32,7 +32,7 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
                 <ShieldCheck className="w-4 h-4" />
               </a>
             </div>
-            <p className="text-sm font-bold text-amber-300 mb-1">
+            <p className="text-sm font-bold text-amber-300 mb-1 sm:whitespace-nowrap">
               {isAr ? INFLUENCER_PROFILE.mottoAr : INFLUENCER_PROFILE.mottoFr}
             </p>
             <p className="text-xs text-purple-300 font-mono mb-4">

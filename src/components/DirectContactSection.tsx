@@ -93,7 +93,28 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
   }, []);
 
   const handleHype = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    // 1. Immediate optimistic UI increment so clicking is instantly responsive
+    // 1. Synchronously capture element position & trigger visual burst
+    if (e.currentTarget) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left + (Math.random() * 40 - 20);
+      const y = e.clientY - rect.top - 20;
+      const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+      const newBurst = {
+        id: Date.now() + Math.random(),
+        x,
+        y,
+        emoji: randomEmoji
+      };
+
+      setBursts((prev) => [...prev.slice(-15), newBurst]);
+
+      setTimeout(() => {
+        setBursts((prev) => prev.filter((b) => b.id !== newBurst.id));
+      }, 1200);
+    }
+
+    // 2. Immediate optimistic UI increment so clicking is instantly responsive
     setHypeCount((prev) => {
       const next = prev + 1;
       try {
@@ -103,7 +124,7 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
       return next;
     });
 
-    // 2. Send real online hit to cloud server so all other users receive the increment
+    // 3. Send real online hit to cloud server so all other users receive the increment
     try {
       const res = await fetch(`${ONLINE_HYPE_BASE}/hit/${ONLINE_HYPE_KEY}`);
       if (res.ok) {
@@ -114,24 +135,6 @@ export const DirectContactSection: React.FC<DirectContactSectionProps> = ({ lang
         }
       }
     } catch {}
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left + (Math.random() * 40 - 20);
-    const y = e.clientY - rect.top - 20;
-    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-
-    const newBurst = {
-      id: Date.now() + Math.random(),
-      x,
-      y,
-      emoji: randomEmoji
-    };
-
-    setBursts((prev) => [...prev.slice(-15), newBurst]);
-
-    setTimeout(() => {
-      setBursts((prev) => prev.filter((b) => b.id !== newBurst.id));
-    }, 1200);
   };
 
   const handleCopyEmail = () => {
