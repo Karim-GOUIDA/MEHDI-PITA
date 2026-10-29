@@ -11,7 +11,7 @@ interface RealVideosSectionProps {
 export const RealVideosSection: React.FC<RealVideosSectionProps> = ({ lang, videos }) => {
   const [activeVideo, setActiveVideo] = useState<RealVideo | null>(null);
   const isAr = lang === 'ar';
-  const videosList = videos && videos.length > 0 ? videos : REAL_YOUTUBE_VIDEOS;
+  const videosList = videos ?? REAL_YOUTUBE_VIDEOS;
 
   return (
     <section id="videos" className="py-20 md:py-28 bg-[#080718] border-t border-purple-950/60 scroll-mt-16 relative">
