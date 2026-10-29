@@ -83,10 +83,10 @@ export default function App() {
       const online = await fetchOnlineData();
       if (!isSubscribed || !online) return;
 
-      if (Array.isArray(online.platforms) && online.platforms.length > 0) {
+      if (Array.isArray(online.platforms)) {
         setPlatforms(online.platforms);
       }
-      if (Array.isArray(online.videos) && online.videos.length > 0) {
+      if (Array.isArray(online.videos)) {
         setVideos(online.videos);
       }
     };
