@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /pitadmin
+
+Sitemap: https://mehdipita.fyi/sitemap.xml

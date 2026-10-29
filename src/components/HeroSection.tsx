@@ -28,7 +28,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const ttCount = formatCompactNumber(tiktokPlatform?.followersCount || '13.2K');
 
   return (
-    <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden border-b border-purple-950/60">
+    <section id="top" aria-labelledby="hero-title" className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden border-b border-purple-950/60">
       {/* Dynamic Purple-Blue ambient glow spheres */}
       <div
         className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-gradient-to-tr from-violet-600/30 via-indigo-600/25 to-transparent blur-[140px] pointer-events-none rounded-full animate-pulse-glow"
@@ -57,10 +57,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex items-center gap-3 sm:gap-4 mb-5">
               <img
                 src={INFLUENCER_PROFILE.avatar}
-                alt="MEHDI PITA"
+                alt={isAr ? 'مهدي بيتا، صانع محتوى كرة القدم والفكاهة' : 'MEHDI PITA, créateur de contenu football et humour'}
+                width="447"
+                height="447"
                 className="w-14 h-14 rounded-2xl object-cover border-2 border-purple-500/50 shadow-lg md:hidden shrink-0"
               />
-              <h1 className="font-display text-4xl sm:text-5xl md:text-5xl lg:text-[4.2rem] font-black tracking-tight text-white leading-[1.1] [text-wrap:balance]">
+              <h1 id="hero-title" className="font-display text-4xl sm:text-5xl md:text-5xl lg:text-[4.2rem] font-black tracking-tight text-white leading-[1.1] [text-wrap:balance]">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400 uppercase font-mono">
                   MEHDI PITA
                 </span>
@@ -160,7 +162,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="relative aspect-square rounded-3xl overflow-hidden border-2 border-purple-500/40 shadow-2xl bg-zinc-950 group">
                 <img
                   src={INFLUENCER_PROFILE.avatar}
-                  alt="MEHDI PITA"
+                  alt={isAr ? 'مهدي بيتا، صانع محتوى كرة القدم والفكاهة' : 'MEHDI PITA, créateur de contenu football et humour'}
+                  width="447"
+                  height="447"
+                  fetchPriority="high"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
                 />

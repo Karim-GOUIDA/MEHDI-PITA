@@ -30,7 +30,7 @@ export const SocialPlatformsGrid: React.FC<SocialPlatformsGridProps> = ({
   };
 
   return (
-    <section id="platforms" className="py-20 md:py-28 relative scroll-mt-16">
+    <section id="platforms" aria-labelledby="platforms-title" className="py-20 md:py-28 relative scroll-mt-16">
       {/* Background ambient light */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl h-96 bg-gradient-to-r from-violet-900/10 via-indigo-900/15 to-cyan-900/10 blur-[130px] pointer-events-none" />
 
@@ -42,7 +42,7 @@ export const SocialPlatformsGrid: React.FC<SocialPlatformsGridProps> = ({
             <span className="text-zinc-600" aria-hidden="true">·</span>
             <span>{isAr ? 'روابط مباشرة ومؤكدة' : 'Liens directs & certifiés'}</span>
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white [text-wrap:balance]">
+          <h2 id="platforms-title" className="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white [text-wrap:balance]">
             {isAr ? 'حسابات التواصل الاجتماعي لـ MEHDI PITA' : 'Réseaux sociaux officiels de MEHDI PITA'}
           </h2>
           <p className="text-zinc-300 text-base mt-3">
@@ -58,7 +58,7 @@ export const SocialPlatformsGrid: React.FC<SocialPlatformsGridProps> = ({
             const isHighlighted = selectedPlatformId === platform.id;
 
             return (
-              <div
+              <article
                 key={platform.id}
                 id={`platform-card-${platform.id}`}
                 className={`group relative rounded-3xl p-6 sm:p-7 bg-gradient-to-b from-[#110e2b]/95 to-[#09071c]/95 border transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-950/80 ${
@@ -156,7 +156,7 @@ export const SocialPlatformsGrid: React.FC<SocialPlatformsGridProps> = ({
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>

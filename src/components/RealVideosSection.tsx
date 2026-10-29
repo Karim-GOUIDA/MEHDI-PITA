@@ -14,7 +14,7 @@ export const RealVideosSection: React.FC<RealVideosSectionProps> = ({ lang, vide
   const videosList = videos ?? REAL_YOUTUBE_VIDEOS;
 
   return (
-    <section id="videos" className="py-20 md:py-28 bg-[#080718] border-t border-purple-950/60 scroll-mt-16 relative">
+    <section id="videos" aria-labelledby="videos-title" className="py-20 md:py-28 bg-[#080718] border-t border-purple-950/60 scroll-mt-16 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
@@ -22,7 +22,7 @@ export const RealVideosSection: React.FC<RealVideosSectionProps> = ({ lang, vide
               <YoutubeIcon className="w-4 h-4 text-red-500" />
               <span>{isAr ? 'فيديوهات يوتيوب الرسمية' : 'Vidéos YouTube officielles'}</span>
             </div>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white [text-wrap:balance]">
+            <h2 id="videos-title" className="font-display text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white [text-wrap:balance]">
               {isAr ? 'أحدث فيديوهات MEHDI PITA على YouTube' : 'Dernières vidéos YouTube de MEHDI PITA'}
             </h2>
             <p className="text-zinc-300 text-base max-w-xl mt-3">
@@ -56,7 +56,11 @@ export const RealVideosSection: React.FC<RealVideosSectionProps> = ({ lang, vide
               <div className="relative aspect-video overflow-hidden bg-black">
                 <img
                   src={video.thumbnail}
-                  alt={isAr ? video.titleAr : video.titleFr}
+                  alt={`${isAr ? 'فيديو يوتيوب: ' : 'Vidéo YouTube : '}${isAr ? video.titleAr : video.titleFr}`}
+                  width="480"
+                  height="360"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     e.currentTarget.src = video.fallbackThumbnail;
                   }}

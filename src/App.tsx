@@ -141,6 +141,41 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const isAr = lang === 'ar';
+    const title = isAdminView
+      ? 'Administration | MEHDI PITA'
+      : isAr
+        ? 'MEHDI PITA | صانع محتوى كرة القدم والفكاهة'
+        : 'MEHDI PITA | Créateur de contenu football et humour';
+    const description = isAdminView
+      ? 'Administration du site officiel MEHDI PITA.'
+      : isAr
+        ? 'الموقع الرسمي لمهدي بيتا، صانع محتوى كرة القدم والفكاهة. تابع حساباته الرسمية على إنستغرام ويوتيوب وتيك توك وفيسبوك.'
+        : 'Site officiel de MEHDI PITA, créateur de contenu football et humour. Retrouvez ses comptes officiels sur Instagram, YouTube, TikTok et Facebook.';
+
+    document.title = title;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+
+    const setMetaContent = (selector: string, attribute: 'name' | 'property', key: string, content: string) => {
+      let meta = document.head.querySelector<HTMLMetaElement>(selector);
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, key);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    setMetaContent('meta[name="description"]', 'name', 'description', description);
+    setMetaContent('meta[name="robots"]', 'name', 'robots', isAdminView ? 'noindex, nofollow' : 'index, follow, max-image-preview:large');
+    setMetaContent('meta[property="og:title"]', 'property', 'og:title', title);
+    setMetaContent('meta[property="og:description"]', 'property', 'og:description', description);
+    setMetaContent('meta[name="twitter:title"]', 'name', 'twitter:title', title);
+    setMetaContent('meta[name="twitter:description"]', 'name', 'twitter:description', description);
+  }, [isAdminView, lang]);
+
   const handleSaveData = async (
     newData: { platforms: SocialPlatform[]; videos: RealVideo[] },
     password: string
@@ -207,6 +242,13 @@ export default function App() {
       dir={isAr ? 'rtl' : 'ltr'}
       lang={lang}
     >
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-black"
+      >
+        {isAr ? 'انتقل إلى المحتوى الرئيسي' : 'Aller au contenu principal'}
+      </a>
+
       {/* Toast Notification */}
       {copiedLink && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-gradient-to-r from-violet-600 to-cyan-500 text-white font-black text-xs rounded-full shadow-2xl shadow-indigo-900/80 flex items-center gap-2 animate-bounce border border-cyan-400/50">
@@ -227,7 +269,7 @@ export default function App() {
       />
 
       {/* Main Sections */}
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero Section */}
         <HeroSection
           lang={lang}

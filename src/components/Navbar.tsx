@@ -41,7 +41,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand Name: ALWAYS MEHDI PITA ONLY */}
         <div className="flex items-center gap-2 group whitespace-nowrap shrink-0">
           <a
-            href="#"
+            href="#top"
+            aria-label={isAr ? 'العودة إلى بداية موقع MEHDI PITA' : 'Retour en haut du site MEHDI PITA'}
             className="font-display text-2xl sm:text-3xl font-black tracking-tight uppercase bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent hover:from-violet-300 hover:to-cyan-200 transition-all font-mono focus:outline-none"
           >
             MEHDI PITA
@@ -50,13 +51,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             href="#/pitadmin"
             className="text-cyan-400 hover:text-cyan-300 transition-colors p-0.5 cursor-pointer"
             title="Admin"
+            aria-label="Administration"
           >
             <BadgeCheck className="w-5 h-5 shrink-0" aria-label="Verified" />
           </a>
         </div>
 
         {/* Nav Links */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-bold text-zinc-300">
+        <nav aria-label={isAr ? 'التنقل الرئيسي' : 'Navigation principale'} className="hidden md:flex items-center gap-7 text-sm font-bold text-zinc-300">
           <a
             href="#platforms"
             className="hover:text-cyan-400 transition-colors whitespace-nowrap shrink-0"
