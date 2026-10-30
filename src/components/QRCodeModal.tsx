@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Copy, Check } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { INFLUENCER_PROFILE, Language } from '../data/influencerData';
 
 interface QRCodeModalProps {
@@ -14,7 +15,11 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ isOpen, onClose, lang 
 
   if (!isOpen) return null;
 
-  const profileUrl = typeof window !== 'undefined' ? window.location.href : 'https://www.instagram.com/mehdipita/';
+  const currentPath = window.location.pathname;
+  const publicPath = currentPath.toLowerCase().endsWith('/pitadmin')
+    ? currentPath.slice(0, -'pitadmin'.length)
+    : currentPath;
+  const profileUrl = new URL(publicPath || '/', window.location.origin).href;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(profileUrl);
@@ -46,46 +51,15 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({ isOpen, onClose, lang 
 
         {/* QR Code */}
         <div className="p-5 my-5 bg-white rounded-2xl shadow-inner mx-auto inline-block">
-          <svg className="w-48 h-48" viewBox="0 0 100 100" fill="none">
-            <rect x="5" y="5" width="26" height="26" fill="#09090b" rx="4" />
-            <rect x="9" y="9" width="18" height="18" fill="white" rx="2" />
-            <rect x="13" y="13" width="10" height="10" fill="#09090b" rx="2" />
-
-            <rect x="69" y="5" width="26" height="26" fill="#09090b" rx="4" />
-            <rect x="73" y="9" width="18" height="18" fill="white" rx="2" />
-            <rect x="77" y="13" width="10" height="10" fill="#09090b" rx="2" />
-
-            <rect x="5" y="69" width="26" height="26" fill="#09090b" rx="4" />
-            <rect x="9" y="73" width="18" height="18" fill="white" rx="2" />
-            <rect x="13" y="77" width="10" height="10" fill="#09090b" rx="2" />
-
-            <rect x="36" y="8" width="6" height="6" fill="#09090b" />
-            <rect x="46" y="8" width="6" height="6" fill="#09090b" />
-            <rect x="56" y="8" width="6" height="6" fill="#09090b" />
-            <rect x="36" y="18" width="6" height="6" fill="#09090b" />
-            <rect x="48" y="22" width="6" height="6" fill="#09090b" />
-            <rect x="58" y="18" width="6" height="6" fill="#09090b" />
-
-            <rect x="8" y="36" width="6" height="6" fill="#09090b" />
-            <rect x="18" y="46" width="6" height="6" fill="#09090b" />
-            <rect x="8" y="56" width="6" height="6" fill="#09090b" />
-
-            <rect x="36" y="36" width="28" height="28" fill="#53FC18" rx="4" />
-            <circle cx="50" cy="50" r="8" fill="#09090b" />
-            <circle cx="50" cy="50" r="4" fill="#53FC18" />
-
-            <rect x="72" y="36" width="6" height="6" fill="#09090b" />
-            <rect x="82" y="42" width="6" height="6" fill="#09090b" />
-            <rect x="72" y="52" width="6" height="6" fill="#09090b" />
-            <rect x="86" y="58" width="6" height="6" fill="#09090b" />
-
-            <rect x="36" y="72" width="6" height="6" fill="#09090b" />
-            <rect x="46" y="78" width="6" height="6" fill="#09090b" />
-            <rect x="56" y="72" width="6" height="6" fill="#09090b" />
-            <rect x="42" y="86" width="6" height="6" fill="#09090b" />
-            <rect x="72" y="74" width="8" height="8" fill="#09090b" />
-            <rect x="84" y="84" width="6" height="6" fill="#09090b" />
-          </svg>
+          <QRCodeSVG
+            value={profileUrl}
+            size={192}
+            level="H"
+            includeMargin
+            bgColor="#ffffff"
+            fgColor="#09090b"
+            title={isAr ? 'رمز QR للموقع الرسمي MEHDI PITA' : 'QR code for the official MEHDI PITA website'}
+          />
         </div>
 
         <h4 className="font-display text-xl font-black text-white font-mono">
