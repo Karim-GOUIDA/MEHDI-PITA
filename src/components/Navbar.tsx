@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { BadgeCheck, Share2, QrCode, Globe, Mail } from 'lucide-react';
+import { BadgeCheck, QrCode, Globe, Mail } from 'lucide-react';
 import { Language } from '../data/influencerData';
 
 interface NavbarProps {
   lang: Language;
   onToggleLang: () => void;
   onOpenQr: () => void;
-  onCopyLink: () => void;
-  copied: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   lang,
   onToggleLang,
-  onOpenQr,
-  onCopyLink,
-  copied
+  onOpenQr
 }) => {
   const [scrolled, setScrolled] = useState(false);
 
@@ -91,14 +87,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="font-mono font-black">{isAr ? 'FR' : 'العربية'}</span>
           </button>
 
-          <button
-            onClick={onCopyLink}
-            title={copied ? (isAr ? "تم النسخ!" : "Lien copié !") : (isAr ? "نسخ الرابط" : "Copier le lien")}
-            aria-label="Share"
-            className="p-2 text-zinc-400 hover:text-cyan-300 hover:bg-purple-950/40 rounded-xl transition-all border border-purple-900/40 cursor-pointer"
-          >
-            <Share2 className="w-4 h-4" />
-          </button>
           <button
             onClick={onOpenQr}
             title={isAr ? "باركود الهاتف" : "QR Code"}

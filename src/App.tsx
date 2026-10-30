@@ -22,7 +22,6 @@ import {
   REAL_YOUTUBE_VIDEOS
 } from './data/influencerData';
 import { authenticateAdmin, fetchOnlineData, saveOnlineData } from './services/apiService';
-import { Check } from 'lucide-react';
 
 const checkIsAdminPath = (): boolean => {
   if (typeof window === 'undefined') return false;
@@ -47,7 +46,6 @@ export default function App() {
   const [lang, setLang] = useState<Language>('ar');
   const [isQrOpen, setIsQrOpen] = useState(false);
   const [highlightedPlatformId, setHighlightedPlatformId] = useState<string | null>(null);
-  const [copiedLink, setCopiedLink] = useState(false);
   const [isAdminView, setIsAdminView] = useState<boolean>(checkIsAdminPath);
 
   // Managed customizable platforms (loaded from localStorage or default)
@@ -205,13 +203,6 @@ export default function App() {
     setLang((prev) => (prev === 'ar' ? 'fr' : 'ar'));
   };
 
-  const handleCopyProfileLink = () => {
-    const url = window.location.origin + window.location.pathname;
-    navigator.clipboard.writeText(url);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2500);
-  };
-
   const handleSelectPlatform = (platformId: string) => {
     setHighlightedPlatformId(platformId);
     const element = document.getElementById(`platform-card-${platformId}`) || document.getElementById('platforms');
@@ -249,23 +240,11 @@ export default function App() {
         {isAr ? 'انتقل إلى المحتوى الرئيسي' : 'Aller au contenu principal'}
       </a>
 
-      {/* Toast Notification */}
-      {copiedLink && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-gradient-to-r from-violet-600 to-cyan-500 text-white font-black text-xs rounded-full shadow-2xl shadow-indigo-900/80 flex items-center gap-2 animate-bounce border border-cyan-400/50">
-          <Check className="w-4 h-4 stroke-[3]" />
-          <span>
-            {isAr ? 'تم نسخ رابط الموقع الرسمي لـ MEHDI PITA!' : 'Lien officiel de MEHDI PITA copié !'}
-          </span>
-        </div>
-      )}
-
       {/* Top Navigation */}
       <Navbar
         lang={lang}
         onToggleLang={toggleLang}
         onOpenQr={() => setIsQrOpen(true)}
-        onCopyLink={handleCopyProfileLink}
-        copied={copiedLink}
       />
 
       {/* Main Sections */}
